@@ -1,0 +1,993 @@
+/* eslint-disable */
+import React, { useState, useContext, useEffect } from 'react'
+import client from '../../feathers'
+import { useNavigate } from 'react-router-dom'
+import { UserContext, ObjectContext } from '../../context'
+import { formatDistanceToNowStrict, format, subDays, addDays } from 'date-fns'
+import 'react-datepicker/dist/react-datepicker.css'
+import { PageWrapper } from '../../ui/styled/styles'
+import { TableMenu } from '../../ui/styled/global'
+import FilterMenu from '../../components/utilities/FilterMenu'
+import CustomTable from '../../components/customtable'
+import { AppointmentSchema } from '../Clinic/schema'
+import ModalBox from '../../components/modal'
+import { Box, Grid } from '@mui/material'
+import GlobalCustomButton from '../../components/buttons/CustomButton'
+import Input from '../../components/inputs/basic/Input'
+
+export default function TheatreCheckIn() {
+    const { state } = useContext(ObjectContext) //,setState
+    // eslint-disable-next-line
+    const [selectedClient, setSelectedClient] = useState()
+    //const [showState,setShowState]=useState() //create|modify|detail
+    const [checkinpage, setCheckinpage] = useState('checkin')
+    const [showModal, setShowModal] = useState(false)
+
+    return (
+        <section className="section remPadTop">
+            {checkinpage === 'checkin' && (
+                <CheckIn
+                    pageView={checkinpage}
+                    setPageView={setCheckinpage}
+                    showModal={showModal}
+                    setShowModal={setShowModal}
+                />
+            )}
+            {checkinpage === 'checkout' && (
+                <CheckOut
+                    pageView={checkinpage}
+                    setPageView={setCheckinpage}
+                    showModal={showModal}
+                    setShowModal={setShowModal}
+                />
+            )}
+            {showModal && (
+                <ModalBox
+                    open={state.AppointmentModule.show === 'detail'}
+                    onClose={() => setShowModal(false)}
+                    header={
+                        checkinpage === 'checkin'
+                            ? 'Check In Details'
+                            : 'Check Out Details'
+                    }
+                >
+                    <CheckDetails checkState={checkinpage} />
+                </ModalBox>
+            )}
+        </section>
+    )
+}
+
+export function CheckIn({ pageView, setPageView, showModal, setShowModal }) {
+    // const { register, handleSubmit, watch, errors } = useForm();
+    // eslint-disable-next-line
+    const [error, setError] = useState(false)
+    // eslint-disable-next-line
+    const [success, setSuccess] = useState(false)
+    // eslint-disable-next-line
+    const [message, setMessage] = useState('')
+    const ClientServ = client.service('appointments')
+    //const navigate=useNavigate()
+    // const {user,setUser} = useContext(UserContext)
+    const [facilities, setFacilities] = useState([])
+    // eslint-disable-next-line
+    const [selectedClient, setSelectedClient] = useState() //
+
+    const { state, setState } = useContext(ObjectContext)
+    // eslint-disable-next-line
+    const { user, setUser } = useContext(UserContext)
+    const [startDate, setStartDate] = useState(new Date())
+    const [selectedAppointment, setSelectedAppointment] = useState()
+    const [loading, setLoading] = useState(false)
+    const [limit, setLimit] = useState(10)
+    const [page, setPage] = useState(1)
+    const [total, setTotal] = useState(0)
+
+    const onTableChangeRowsPerPage = size => {
+        setLimit(size)
+        setPage(1)
+    }
+
+    const onTablePageChange = newPage => {
+        setPage(newPage)
+    }
+
+    const handleCreateNew = async () => {
+        const newClientModule = {
+            selectedAppointment: {},
+            show: 'create',
+        }
+        await setState(prevstate => ({
+            ...prevstate,
+            AppointmentModule: newClientModule,
+        }))
+        //console.log(state)
+        const newClient = {
+            selectedClient: {},
+            show: 'create',
+        }
+        await setState(prevstate => ({ ...prevstate, ClientModule: newClient }))
+    }
+
+    const handleRow = async Client => {
+        setShowModal(true)
+        await setSelectedAppointment(Client)
+        const newClientModule = {
+            selectedAppointment: Client,
+            show: 'detail',
+        }
+        await setState(prevstate => ({
+            ...prevstate,
+            AppointmentModule: newClientModule,
+        }))
+    }
+    //console.log(state.employeeLocation)
+
+    const handleSearch = val => {
+        const field = 'firstname'
+        //  console.log(val)
+
+        let query = {
+            $or: [
+                {
+                    firstname: {
+                        $regex: val,
+                        $options: 'i',
+                    },
+                },
+                {
+                    lastname: {
+                        $regex: val,
+                        $options: 'i',
+                    },
+                },
+                {
+                    middlename: {
+                        $regex: val,
+                        $options: 'i',
+                    },
+                },
+                {
+                    phone: {
+                        $regex: val,
+                        $options: 'i',
+                    },
+                },
+                {
+                    appointment_type: {
+                        $regex: val,
+                        $options: 'i',
+                    },
+                },
+                {
+                    appointment_status: {
+                        $regex: val,
+                        $options: 'i',
+                    },
+                },
+                {
+                    appointment_reason: {
+                        $regex: val,
+                        $options: 'i',
+                    },
+                },
+                {
+                    location_type: {
+                        $regex: val,
+                        $options: 'i',
+                    },
+                },
+                {
+                    location_name: {
+                        $regex: val,
+                        $options: 'i',
+                    },
+                },
+                {
+                    practitioner_department: {
+                        $regex: val,
+                        $options: 'i',
+                    },
+                },
+                {
+                    practitioner_profession: {
+                        $regex: val,
+                        $options: 'i',
+                    },
+                },
+                {
+                    practitioner_name: {
+                        $regex: val,
+                        $options: 'i',
+                    },
+                },
+            ],
+            facility: user.currentEmployee.facilityDetail._id, // || "",
+            $limit: 20,
+            appointment_status: 'Checked In',
+            $sort: {
+                createdAt: -1,
+            },
+            $select: [
+                'firstname',
+                'lastname',
+                'appointmentClass',
+                'location_type',
+                'appointment_type',
+                'appointment_status',
+                'appointment_reason',
+                'practitioner_name',
+                'start_time',
+            ],
+        }
+        if (state.employeeLocation.locationType !== 'Front Desk') {
+            query.locationId = state.employeeLocation.locationId
+        }
+
+        ClientServ.find({ query: query })
+            .then(res => {
+                console.log(res)
+                const checkedOut = res.data.filter(
+                    item =>
+                        item.appointment_status == 'Checked In' &&
+                        item.location_type == 'Theatre',
+                )
+                setFacilities(checkedOut)
+                setMessage(' Client  fetched successfully')
+                setSuccess(true)
+            })
+            .catch(err => {
+                console.log(err)
+                setMessage(
+                    'Error fetching Client, probable network issues ' + err,
+                )
+                setError(true)
+            })
+    }
+
+    const getFacilities = async () => {
+        if (user.currentEmployee) {
+            let stuff = {
+                facility: user.currentEmployee.facilityDetail._id,
+                appointment_status: 'Checked In',
+                $limit: limit,
+                $skip: (page - 1) * limit,
+                $sort: {
+                    createdAt: -1,
+                },
+                $select: [
+                    'firstname',
+                    'lastname',
+                    'appointmentClass',
+                    'location_type',
+                    'appointment_type',
+                    'appointment_status',
+                    'appointment_reason',
+                    'practitioner_name',
+                    'start_time',
+                ],
+            }
+
+            const findClient = await ClientServ.find({ query: stuff })
+            const checkedOut = findClient.data.filter(
+                item =>
+                    item.appointment_status == 'Checked In' &&
+                    item.location_type == 'Theatre',
+            )
+            setFacilities(checkedOut)
+        } else {
+            if (user.stacker) {
+                const pageNumber = 2
+                const pageSize = 100
+                const findClient = await ClientServ.find({
+                    query: {
+
+                        $limit: limit,
+                        $skip: (page - 1) * limit,
+                        $select: [
+                            'firstname',
+                            'lastname',
+                            'appointmentClass',
+                            'location_type',
+                            'appointment_type',
+                            'appointment_status',
+                            'appointment_reason',
+                            'practitioner_name',
+                            'start_time',
+                        ],
+                    },
+                })
+
+                const checkedOut = findClient.data.filter(
+                    item =>
+                        item.appointment_status == 'Checked In' &&
+                        item.location_type == 'Theatre',
+                )
+                setFacilities(checkedOut)
+            }
+        }
+    }
+
+    useEffect(() => {
+        if (user) {
+            handleCalendarClose()
+        }
+        ClientServ.on('created', () => handleCalendarClose())
+        ClientServ.on('updated', () => handleCalendarClose())
+        ClientServ.on('patched', () => handleCalendarClose())
+        ClientServ.on('removed', () => handleCalendarClose())
+        const newClient = {
+            selectedClient: {},
+            show: 'create',
+        }
+        setState(prevstate => ({ ...prevstate, ClientModule: newClient }))
+        return () => { }
+    }, [limit, page])
+    const handleCalendarClose = async () => {
+        let query = {
+            start_time: {
+                $gt: subDays(startDate, 1),
+                $lt: addDays(startDate, 1),
+            },
+            facility: user.currentEmployee.facilityDetail._id,
+            $limit: limit,
+            $skip: (page - 1) * limit,
+            $sort: {
+                createdAt: -1,
+            },
+        }
+
+        const findClient = await ClientServ.find({ query: query })
+        console.log(findClient)
+        const checkedOut = findClient.data.filter(
+            item =>
+                item.appointment_status == 'Checked In' &&
+                item.location_type == 'Theatre',
+        )
+        setFacilities(checkedOut)
+    }
+
+    const handleDate = async date => {
+        setStartDate(date)
+    }
+
+    useEffect(() => {
+        if (startDate) {
+            handleCalendarClose()
+        } else {
+            getFacilities()
+        }
+
+        return () => { }
+    }, [startDate])
+    console.log(pageView, facilities)
+    return (
+        <>
+            {user ? (
+                <>
+                    <div className="level">
+                        <PageWrapper
+                            style={{
+                                flexDirection: 'column',
+                                padding: '0.6rem 1rem',
+                            }}
+                        >
+                            <TableMenu>
+                                <div
+                                    style={{
+                                        display: 'flex',
+                                        alignItems: 'center',
+
+                                        width: '100%',
+                                    }}
+                                >
+                                    {handleSearch && (
+                                        <div className="inner-table">
+                                            <FilterMenu
+                                                onSearch={handleSearch}
+                                            />
+                                        </div>
+                                    )}
+                                    <h2
+                                        style={{
+                                            marginLeft: '10px',
+                                            fontSize: '0.95rem',
+                                        }}
+                                    >
+                                        Checked In Clients
+                                    </h2>
+
+                                    <GlobalCustomButton
+                                        text={
+                                            pageView === 'checkin'
+                                                ? 'Check Out'
+                                                : 'Check In'
+                                        }
+                                        onClick={() => setPageView('checkout')}
+                                        customStyles={{
+                                            float: 'right',
+                                            marginLeft: 'auto',
+                                        }}
+                                    />
+                                </div>
+                            </TableMenu>
+                            <div
+                                style={{
+                                    width: '100%',
+                                    height: '600px',
+                                    overflow: 'auto',
+                                }}
+                            >
+                                <CustomTable
+                                    title={''}
+                                    columns={AppointmentSchema}
+                                    data={facilities}
+                                    pointerOnHover
+                                    highlightOnHover
+                                    striped
+                                    onRowClicked={handleRow}
+                                    progressPending={loading}
+                                    onChangeRowsPerPage={
+                                        onTableChangeRowsPerPage
+                                    }
+                                    onChangePage={onTablePageChange}
+                                    pagination
+                                    paginationServer
+                                    paginationTotalRows={total}
+                                />
+                            </div>
+                        </PageWrapper>
+                    </div>
+                </>
+            ) : (
+                <div>loading</div>
+            )}
+        </>
+    )
+}
+export function CheckOut({ pageView, setPageView, showModal, setShowModal }) {
+    const [error, setError] = useState(false)
+    const [success, setSuccess] = useState(false)
+    const [message, setMessage] = useState('')
+    const ClientServ = client.service('appointments')
+
+    const [facilities, setFacilities] = useState([])
+    const [selectedClient, setSelectedClient] = useState() //
+
+    const { state, setState } = useContext(ObjectContext)
+    const { user, setUser } = useContext(UserContext)
+    const [startDate, setStartDate] = useState(new Date())
+    const [selectedAppointment, setSelectedAppointment] = useState()
+    const [loading, setLoading] = useState(false)
+    const [limit, setLimit] = useState(10)
+    const [page, setPage] = useState(1)
+    const [total, setTotal] = useState(0)
+
+    const onTableChangeRowsPerPage = size => {
+        setLimit(size)
+        setPage(1)
+    }
+
+    const onTablePageChange = newPage => {
+        setPage(newPage)
+    }
+
+    const handleRow = async Client => {
+        setShowModal(true)
+        await setSelectedAppointment(Client)
+        const newClientModule = {
+            selectedAppointment: Client,
+            show: 'detail',
+        }
+        await setState(prevstate => ({
+            ...prevstate,
+            AppointmentModule: newClientModule,
+        }))
+    }
+
+    const handleSearch = val => {
+        let query = {
+            $or: [
+                {
+                    firstname: {
+                        $regex: val,
+                        $options: 'i',
+                    },
+                },
+                {
+                    lastname: {
+                        $regex: val,
+                        $options: 'i',
+                    },
+                },
+                {
+                    middlename: {
+                        $regex: val,
+                        $options: 'i',
+                    },
+                },
+                {
+                    phone: {
+                        $regex: val,
+                        $options: 'i',
+                    },
+                },
+                {
+                    appointment_type: {
+                        $regex: val,
+                        $options: 'i',
+                    },
+                },
+                {
+                    appointment_status: {
+                        $regex: val,
+                        $options: 'i',
+                    },
+                },
+                {
+                    appointment_reason: {
+                        $regex: val,
+                        $options: 'i',
+                    },
+                },
+                {
+                    location_type: {
+                        $regex: val,
+                        $options: 'i',
+                    },
+                },
+                {
+                    location_name: {
+                        $regex: val,
+                        $options: 'i',
+                    },
+                },
+                {
+                    practitioner_department: {
+                        $regex: val,
+                        $options: 'i',
+                    },
+                },
+                {
+                    practitioner_profession: {
+                        $regex: val,
+                        $options: 'i',
+                    },
+                },
+                {
+                    practitioner_name: {
+                        $regex: val,
+                        $options: 'i',
+                    },
+                },
+            ],
+            facility: user.currentEmployee.facilityDetail._id, // || "",
+            $limit: limit,
+            $skip: (page - 1) * limit,
+            appointment_status: 'Checked Out',
+            $sort: {
+                createdAt: -1,
+            },
+            $select: [
+                'firstname',
+                'lastname',
+                'appointmentClass',
+                'location_type',
+                'appointment_type',
+                'appointment_status',
+                'appointment_reason',
+                'practitioner_name',
+                'start_time',
+            ],
+        }
+        if (state.employeeLocation.locationType !== 'Front Desk') {
+            query.locationId = state.employeeLocation.locationId
+        }
+
+        ClientServ.find({ query: query })
+            .then(res => {
+                const checkedOut = res.data.filter(
+                    item =>
+                        item.appointment_status == 'Checked Out' &&
+                        item.location_type == 'Theatre',
+                )
+                setFacilities(checkedOut)
+                setMessage(' Client  fetched successfully')
+                setSuccess(true)
+            })
+            .catch(err => {
+                console.log(err)
+                setMessage(
+                    'Error fetching Client, probable network issues ' + err,
+                )
+                setError(true)
+            })
+    }
+
+    const getFacilities = async () => {
+        if (user.currentEmployee) {
+            const pageNumber = 2
+            const pageSize = 100
+            let stuff = {
+                facility: user.currentEmployee.facilityDetail._id,
+                appointment_status: 'Checked Out',
+                $limit: limit,
+                $skip: (page - 1) * limit,
+                $sort: {
+                    createdAt: -1,
+                },
+                $select: [
+                    'firstname',
+                    'lastname',
+                    'appointmentClass',
+                    'location_type',
+                    'appointment_type',
+                    'appointment_status',
+                    'appointment_reason',
+                    'practitioner_name',
+                    'start_time',
+                ],
+            }
+
+            const findClient = await ClientServ.find({ query: stuff })
+            const checkedOut = findClient.data.filter(
+                item =>
+                    item.appointment_status == 'Checked Out' &&
+                    item.location_type == 'Theatre',
+            )
+            setFacilities(checkedOut)
+        } else {
+            if (user.stacker) {
+                const findClient = await ClientServ.find({
+                    query: {
+                        $limit: limit,
+                        $skip: (page - 1) * limit,
+                        $sort: {
+                            createdAt: -1,
+                        },
+                        $select: [
+                            'firstname',
+                            'lastname',
+                            'appointmentClass',
+                            'location_type',
+                            'appointment_type',
+                            'appointment_status',
+                            'appointment_reason',
+                            'practitioner_name',
+                            'start_time',
+                        ],
+                    },
+                })
+
+                const checkedOut = findClient.data.filter(
+                    item =>
+                        item.appointment_status == 'Checked Out' &&
+                        item.location_type == 'Theatre',
+                )
+                setFacilities(checkedOut)
+            }
+        }
+    }
+
+    useEffect(() => {
+        if (user) {
+            handleCalendarClose()
+        }
+        ClientServ.on('created', () => handleCalendarClose())
+        ClientServ.on('updated', () => handleCalendarClose())
+        ClientServ.on('patched', () => handleCalendarClose())
+        ClientServ.on('removed', () => handleCalendarClose())
+        const newClient = {
+            selectedClient: {},
+            show: 'create',
+        }
+        setState(prevstate => ({ ...prevstate, ClientModule: newClient }))
+        return () => { }
+    }, [limit, page])
+
+    const handleCalendarClose = async () => {
+        let query = {
+            start_time: {
+                $gt: subDays(startDate, 1),
+                $lt: addDays(startDate, 1),
+            },
+            facility: user.currentEmployee.facilityDetail._id,
+            $limit: limit,
+            $skip: (page - 1) * limit,
+            $sort: {
+                createdAt: -1,
+            },
+        }
+
+        const findClient = await ClientServ.find({ query: query })
+        const checkedOut = findClient.data.filter(
+            item =>
+                item.appointment_status == 'Checked Out' &&
+                item.location_type == 'Theatre',
+        )
+        setFacilities(checkedOut)
+    }
+
+    useEffect(() => {
+        if (startDate) {
+            handleCalendarClose()
+        } else {
+            getFacilities()
+        }
+
+        return () => { }
+    }, [startDate])
+
+    return (
+        <>
+            {user ? (
+                <>
+                    <div className="level">
+                        <PageWrapper
+                            style={{
+                                flexDirection: 'column',
+                                padding: '0.6rem 1rem',
+                            }}
+                        >
+                            <TableMenu>
+                                <div
+                                    style={{
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        width: '100%',
+                                    }}
+                                >
+                                    {handleSearch && (
+                                        <div className="inner-table">
+                                            <FilterMenu
+                                                onSearch={handleSearch}
+                                            />
+                                        </div>
+                                    )}
+                                    <h2
+                                        style={{
+                                            marginLeft: '10px',
+                                            fontSize: '0.95rem',
+                                        }}
+                                    >
+                                        Checked Out Clients
+                                    </h2>
+                                    <GlobalCustomButton
+                                        text={
+                                            pageView === 'checkin'
+                                                ? 'Check Out'
+                                                : 'Check In'
+                                        }
+                                        onClick={() => setPageView('checkin')}
+                                        customStyles={{
+                                            float: 'right',
+                                            marginLeft: 'auto',
+                                        }}
+                                    />
+                                </div>
+                            </TableMenu>
+                            <div
+                                style={{
+                                    width: '100%',
+                                    height: '600px',
+                                    overflow: 'auto',
+                                }}
+                            >
+                                <CustomTable
+                                    title={''}
+                                    columns={AppointmentSchema}
+                                    data={facilities}
+                                    pointerOnHover
+                                    highlightOnHover
+                                    striped
+                                    onRowClicked={handleRow}
+                                    progressPending={loading}
+                                    onChangeRowsPerPage={
+                                        onTableChangeRowsPerPage
+                                    }
+                                    onChangePage={onTablePageChange}
+                                    pagination
+                                    paginationServer
+                                    paginationTotalRows={total}
+                                />
+                            </div>
+                        </PageWrapper>
+                    </div>
+                </>
+            ) : (
+                <div>loading</div>
+            )}
+        </>
+    )
+}
+export function CheckDetails({ checkState }) {
+    const { state, setState } = useContext(ObjectContext)
+    const [selectedClient, setSelectedClient] = useState()
+    const navigate = useNavigate()
+
+    const [edit, setEdit] = useState(false)
+
+    const Client = state.AppointmentModule.selectedAppointment
+
+    const hanldeAttendToClient = async () => {
+        console.log(Client)
+        const patient = await client.service('client').get(Client.clientId)
+        await setSelectedClient(patient)
+        const newClientModule = {
+            selectedClient: patient,
+            show: 'detail',
+        }
+        await setState(prevstate => ({
+            ...prevstate,
+            ClientModule: newClientModule,
+        }))
+        navigate('/app/clinic/documentation')
+    }
+
+    return (
+        <>
+            <Box
+                sx={{
+                    width: '100%',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'right',
+                }}
+                mb={2}
+            >
+                {checkState === 'checkin' && (
+                    <GlobalCustomButton
+                        text="Attend to Client"
+                        onClick={hanldeAttendToClient}
+                        customStyles={{
+                            float: 'right',
+                            marginLeft: 'auto',
+                        }}
+                    />
+                )}
+            </Box>
+            <Grid container spacing={1} mt={1}>
+                <Grid item xs={12} md={4}>
+                    <Input
+                        label="First Name"
+                        value={Client?.firstname}
+                        disabled={edit ? false : true}
+                    />
+                </Grid>
+                <Grid item xs={12} md={4}>
+                    <Input
+                        label="Middle Name"
+                        value={Client?.middlename}
+                        disabled={edit ? false : true}
+                    />
+                </Grid>
+                <Grid item xs={12} md={4}>
+                    <Input
+                        label="Last Name"
+                        value={Client?.lastname}
+                        disabled={edit ? false : true}
+                    />
+                </Grid>
+            </Grid>
+            <Grid container spacing={1} mt={1}>
+                <Grid item xs={12} md={4}>
+                    <Input
+                        label="Age"
+                        value={formatDistanceToNowStrict(new Date(Client.dob))}
+                        disabled={edit ? false : true}
+                    />
+                </Grid>
+                <Grid item xs={12} md={4}>
+                    <Input
+                        label="Gender"
+                        value={Client.gender}
+                        disabled={edit ? false : true}
+                    />
+                </Grid>
+                <Grid item xs={12} md={4}>
+                    <Input
+                        label="Phone Number"
+                        value={Client?.phone}
+                        disabled={edit ? false : true}
+                    />
+                </Grid>
+            </Grid>
+            <Grid container spacing={1} my={1}>
+                <Grid item xs={12} md={4}>
+                    <Input
+                        label="Email"
+                        value={Client?.email}
+                        disabled={edit ? false : true}
+                    />
+                </Grid>
+            </Grid>
+            <hr />
+            <Grid container spacing={1} mt={1}>
+                <Grid item xs={12} md={4}>
+                    <Input
+                        label="Start Date"
+                        value={format(
+                            new Date(Client.start_time),
+                            'dd/MM/yyyy HH:mm',
+                        )}
+                        disabled={edit ? false : true}
+                    />
+                </Grid>
+                {checkState === 'checkout' && (
+                    <Grid item xs={12} md={4}>
+                        <Input
+                            label="End Date"
+                            value={format(
+                                new Date(Client?.updatedAt),
+                                'dd/MM/yyyy HH:mm',
+                            )}
+                            disabled={edit ? false : true}
+                        />
+                    </Grid>
+                )}
+                <Grid item xs={12} md={4}>
+                    <Input
+                        label="Location"
+                        value={Client?.location_name}
+                        disabled={edit ? false : true}
+                    />
+                </Grid>
+                <Grid item xs={12} md={4}>
+                    <Input
+                        label="Professional"
+                        value={`  ${Client.practitioner_name} (${Client.practitioner_profession})`}
+                        disabled={edit ? false : true}
+                    />
+                </Grid>
+            </Grid>
+            <Grid container spacing={1} mt={1}>
+                <Grid item xs={12} md={4}>
+                    <Input
+                        label="Appointment Status"
+                        value={Client?.appointment_status}
+                        disabled={edit ? false : true}
+                    />
+                </Grid>
+                <Grid item xs={12} md={4}>
+                    <Input
+                        label="Appointment Class"
+                        value={Client?.appointmentClass}
+                        disabled={edit ? false : true}
+                    />
+                </Grid>
+                <Grid item xs={12} md={4}>
+                    <Input
+                        label="Appointment Type"
+                        value={Client?.appointment_type}
+                        disabled={edit ? false : true}
+                    />
+                </Grid>
+            </Grid>
+            <Grid container spacing={1} mt={1}>
+                <Grid item xs={12} md={12}>
+                    <label className="label" htmlFor="appointment_reason">
+                        Reason for Appointment
+                    </label>
+                    <textarea
+                        className="input is-small"
+                        name="appointment_reason"
+                        value={Client?.appointment_reason}
+                        disabled={edit ? false : true}
+                        type="text"
+                        placeholder="Appointment Reason"
+                        rows="3"
+                        cols="50"
+                        style={{
+                            border: '1px solid #b6b6b6',
+                            borderRadius: '4px',
+                            color: ' #979DAC',
+                            width: '100%',
+                        }}
+                    >
+                        {' '}
+                    </textarea>
+                </Grid>
+            </Grid>
+        </>
+    )
+}

@@ -1,0 +1,34 @@
+{
+  "totalItems": 3456,
+  "lowStockItems": 124,
+  "outOfStockItems": 28,
+  "totalValue": 12450000,
+  "itemsByCategory": [
+    { "category": "Medicines", "count": 1245, "value": 4500000 },
+    { "category": "Surgical", "count": 856, "value": 3200000 },
+    { "category": "Consumables", "count": 642, "value": 1800000 },
+    { "category": "Equipment", "count": 324, "value": 2100000 },
+    { "category": "Laboratory", "count": 389, "value": 850000 }
+  ],
+  "stockMovement": [
+    { "month": "Jan", "inward": 245, "outward": 198 },
+    { "month": "Feb", "inward": 267, "outward": 215 },
+    { "month": "Mar", "inward": 289, "outward": 234 },
+    { "month": "Apr", "inward": 256, "outward": 212 },
+    { "month": "May", "inward": 298, "outward": 245 },
+    { "month": "Jun", "inward": 278, "outward": 229 }
+  ],
+  "expiringItems": [
+    {
+      "item": "Paracetamol 500mg",
+      "quantity": 500,
+      "expiryDate": "2024-07-15"
+    },
+    {
+      "item": "Amoxicillin 250mg",
+      "quantity": 300,
+      "expiryDate": "2024-07-20"
+    },
+    { "item": "Ibuprofen 400mg", "quantity": 250, "expiryDate": "2024-08-05" }
+  ]
+}

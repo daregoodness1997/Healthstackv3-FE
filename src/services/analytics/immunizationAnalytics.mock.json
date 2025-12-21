@@ -1,0 +1,31 @@
+{
+  "totalVaccinations": 4856,
+  "completedVaccinations": 4124,
+  "pendingVaccinations": 732,
+  "coverageRate": 84.9,
+  "vaccinationsByType": [
+    { "vaccine": "BCG", "count": 856 },
+    { "vaccine": "DPT", "count": 742 },
+    { "vaccine": "Polio", "count": 698 },
+    { "vaccine": "Measles", "count": 624 },
+    { "vaccine": "Hepatitis B", "count": 589 },
+    { "vaccine": "Yellow Fever", "count": 512 },
+    { "vaccine": "Tetanus", "count": 456 },
+    { "vaccine": "HPV", "count": 379 }
+  ],
+  "vaccinationsByAgeGroup": [
+    { "ageGroup": "0-1 years", "count": 1245 },
+    { "ageGroup": "1-5 years", "count": 1856 },
+    { "ageGroup": "5-12 years", "count": 924 },
+    { "ageGroup": "12-18 years", "count": 456 },
+    { "ageGroup": "18+ years", "count": 375 }
+  ],
+  "dailyVaccinations": [
+    { "date": "2024-06-01", "count": 85 },
+    { "date": "2024-06-02", "count": 92 },
+    { "date": "2024-06-03", "count": 78 },
+    { "date": "2024-06-04", "count": 88 },
+    { "date": "2024-06-05", "count": 95 },
+    { "date": "2024-06-06", "count": 82 }
+  ]
+}

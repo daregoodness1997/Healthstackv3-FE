@@ -1,0 +1,30 @@
+{
+  "totalAdmissions": 3842,
+  "currentPatients": 245,
+  "dischargedPatients": 3597,
+  "averageStayDuration": 5.5,
+  "admissionsByWard": [
+    { "ward": "General Ward", "count": 1245 },
+    { "ward": "ICU", "count": 342 },
+    { "ward": "Maternity", "count": 856 },
+    { "ward": "Pediatric", "count": 624 },
+    { "ward": "Surgical", "count": 489 },
+    { "ward": "Medical", "count": 286 }
+  ],
+  "bedOccupancy": [
+    { "ward": "General Ward", "occupied": 45, "total": 60 },
+    { "ward": "ICU", "occupied": 8, "total": 12 },
+    { "ward": "Maternity", "occupied": 18, "total": 25 },
+    { "ward": "Pediatric", "occupied": 22, "total": 30 },
+    { "ward": "Surgical", "occupied": 15, "total": 20 }
+  ],
+  "dailyAdmissions": [
+    { "date": "2024-06-01", "admissions": 28, "discharges": 32 },
+    { "date": "2024-06-02", "admissions": 32, "discharges": 25 },
+    { "date": "2024-06-03", "admissions": 25, "discharges": 30 },
+    { "date": "2024-06-04", "admissions": 30, "discharges": 28 },
+    { "date": "2024-06-05", "admissions": 35, "discharges": 33 },
+    { "date": "2024-06-06", "admissions": 27, "discharges": 29 }
+  ],
+  "occupancyRate": 68.5
+}

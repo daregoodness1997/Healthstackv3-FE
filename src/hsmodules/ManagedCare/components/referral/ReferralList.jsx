@@ -1,0 +1,488 @@
+import React, { useState, useContext, useEffect, useCallback } from "react";
+import client from "../../../../feathers";
+import { UserContext, ObjectContext } from "../../../../context";
+import { format, subDays, addDays } from "date-fns";
+import DatePicker from "react-datepicker";
+import { toast } from "react-toastify";
+import dayjs from "dayjs";
+import AddCircleOutline from "@mui/icons-material/AddCircleOutline";
+import { PageWrapper } from "../../../../ui/styled/styles";
+import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
+import { TableMenu } from "../../../../ui/styled/global";
+import FilterMenu from "../../../../components/utilities/FilterMenu";
+import CustomTable from "../../../../components/customtable";
+import Switch from "../../../../components/switch";
+import { BsFillGridFill, BsList } from "react-icons/bs";
+import CalendarGrid from "../../../../components/calender";
+import GlobalCustomButton from "../../../../components/buttons/CustomButton";
+import { IconButton } from "@mui/material";
+import CustomConfirmationDialog from "../../../../components/confirm-dialog/confirm-dialog";
+
+export function ReferralList({
+  client_id,
+  showDetail,
+  showCreate,
+  setSelectedReferral,
+}) {
+  const ReferralServ = client.service("referral");
+  const [facilities, setFacilities] = useState([]);
+  const { state, setState } = useContext(ObjectContext);
+  const { user, setUser } = useContext(UserContext);
+  const [startDate, setStartDate] = useState(new Date());
+  const [selectedAppointment, setSelectedAppointment] = useState();
+  const [loading, setLoading] = useState(false);
+  const [value, setValue] = useState("list");
+  const [referralListData, setReferralListData] = useState([]);
+
+  const handleCreateNew = async () => {
+    showCreate();
+  };
+
+  const handleRow = async (referral) => {
+    setState((prev) => ({
+      ...prev,
+      ReferralModule: {
+        ...prev.ReferralModule,
+        selectedReferral: referral,
+      },
+      ClientModule: {
+        ...prev.ClientModule,
+        selectedClient: referral.client,
+      },
+    }));
+    showDetail();
+    setSelectedReferral(referral);
+  };
+
+  const handleSearch = (val) => {
+    const field = "firstname";
+    //  console.log(val)
+
+    let query = {
+      $or: [
+        {
+          firstname: {
+            $regex: val,
+            $options: "i",
+          },
+        },
+        {
+          lastname: {
+            $regex: val,
+            $options: "i",
+          },
+        },
+        {
+          middlename: {
+            $regex: val,
+            $options: "i",
+          },
+        },
+        {
+          phone: {
+            $regex: val,
+            $options: "i",
+          },
+        },
+        {
+          appointment_type: {
+            $regex: val,
+            $options: "i",
+          },
+        },
+        {
+          appointment_status: {
+            $regex: val,
+            $options: "i",
+          },
+        },
+        {
+          appointment_reason: {
+            $regex: val,
+            $options: "i",
+          },
+        },
+        {
+          location_type: {
+            $regex: val,
+            $options: "i",
+          },
+        },
+        {
+          location_name: {
+            $regex: val,
+            $options: "i",
+          },
+        },
+        {
+          practitioner_department: {
+            $regex: val,
+            $options: "i",
+          },
+        },
+        {
+          practitioner_profession: {
+            $regex: val,
+            $options: "i",
+          },
+        },
+        {
+          practitioner_name: {
+            $regex: val,
+            $options: "i",
+          },
+        },
+      ],
+      facility: user.currentEmployee.facilityDetail._id, // || "",
+      $limit: 20,
+      $sort: {
+        createdAt: -1,
+      },
+    };
+    if (state.employeeLocation.locationType !== "Front Desk") {
+      query.locationId = state.employeeLocation.locationId;
+    }
+
+    ReferralServ.find({ query: query })
+      .then((res) => {
+        console.log("===>>search referral data", { res });
+        setFacilities(res.data);
+        setMessage(" Client  fetched successfully");
+        setSuccess(true);
+      })
+      .catch((err) => {
+        console.log(err);
+        setMessage("Error fetching Client, probable network issues " + err);
+        setError(true);
+      });
+  };
+
+  const getReferralList = useCallback(async () => {
+    // console.log("===>>>> getlist ", {});
+    console.log("client id", client_id);
+    setLoading(true);
+
+    let query = {
+      source_orgId: user.currentEmployee.facilityDetail._id,
+      $limit: 100,
+      $sort: {
+        createdAt: -1,
+      },
+    };
+
+    if (client_id) {
+      query.clientId = client_id;
+      delete query.source_orgId;
+    }
+    console.log(query);
+    const resp = await ReferralServ.find({ query: query });
+
+    setReferralListData(resp.data);
+    console.log(resp.data);
+    setLoading(false);
+    // console.log("===>>>> response  list", { resp });
+    /* else {
+      if (user.stacker) {
+        const resp = await ReferralServ.find({
+          query: {
+            $limit: 100,
+            $sort: {
+              createdAt: -1,
+            },
+          },
+        });
+
+        setReferralListData(resp.data);
+        setLoading(false);
+      }
+    } */
+  }, []);
+
+  useEffect(() => {
+    getReferralList();
+  }, [getReferralList]);
+
+  const activeStyle = {
+    backgroundColor: "#0064CC29",
+    border: "none",
+    padding: "0 .8rem",
+  };
+
+  const [confirmDialog, setConfirmDialog] = useState(false);
+  const [docToDel, setDocToDel] = useState({});
+
+  const handleDelete = async (obj) => {
+    await ReferralServ.remove(obj._id)
+      .then((resp) => {
+        toast.success("Sucessfuly deleted ProductEntry ");
+        setConfirmDialog(false);
+      })
+      .catch((err) => {
+        toast.error("Error deleting ProductEntry " + err);
+        setConfirmDialog(false);
+      });
+  };
+
+  const handleConfirmDelete = (doc) => {
+    console.log(doc);
+    setDocToDel(doc);
+    setConfirmDialog(true);
+  };
+
+  const handleCancelConfirm = () => {
+    setDocToDel({});
+    setConfirmDialog(false);
+  };
+
+  const ReferralSchema = [
+    {
+      name: "S/N",
+      key: "sn",
+      description: "sn",
+      selector: (row, i) => i + 1,
+      sortable: true,
+      required: true,
+      inputType: "HIDDEN",
+      width: "60px",
+    },
+    {
+      name: "Date",
+      key: "date",
+      description: "Enter date",
+      selector: (row, i) => dayjs(row.createdAt).format("DD/MM/YYYY"),
+      sortable: true,
+      required: true,
+      inputType: "DATE",
+    },
+    {
+      name: "Patients Name",
+      key: "patients_name",
+      description: "Enter patients name",
+      selector: (row) => `${row.client?.lastname} ${row.client?.firstname}`,
+      sortable: true,
+      required: true,
+      inputType: "TEXT",
+    },
+    /*  {
+      name: "Policy ID",
+      key: "policy_id",
+      description: "Enter policy ID",
+      selector: (row) => {
+        const ObejectWithPolicy = row.client?.paymentinfo?.find((obj) =>
+          obj.hasOwnProperty("policy")
+        );
+        const policy = ObejectWithPolicy
+          ? ObejectWithPolicy.policy?.policyNo
+          : "";
+        return policy;
+      },
+      sortable: true,
+      required: false,
+      inputType: "TEXT",
+    }, */
+    /*     {
+      name: "Referral Code",
+      key: "referralNo",
+      description: "Enter referral code",
+      selector: (row) => row.referralNo,
+      sortable: true,
+      required: true,
+      inputType: "TEXT",
+    }, */
+    /*  {
+      name: "Referral Provider",
+      key: "referral_provider",
+      description: "Enter referral provider",
+      selector: (row, i) => row.source_org?.facilityName,
+      sortable: true,
+      required: true,
+      inputType: "TEXT",
+    }, */
+    {
+      name: "Referral From",
+      key: "Referral Location",
+      description: "Enter destination provider",
+      selector: (row, i) => row.source_org_location?.locationName,
+      sortable: true,
+      required: true,
+      inputType: "TEXT",
+    },
+    {
+      name: "Destination ",
+      key: "destination location",
+      description: "Enter destination provider",
+      selector: (row, i) => row.dest_org_location?.name,
+      sortable: true,
+      required: true,
+      inputType: "TEXT",
+    },
+    {
+      name: "Acceptance",
+      key: "Acceptance at destination",
+      description: "Enter destination provider",
+      selector: (row, i) => row.dest_org_acceptance,
+      sortable: true,
+      required: true,
+      inputType: "TEXT",
+    },
+    {
+      name: "Status",
+      key: "status",
+      description: "Enter your status",
+      selector: (row, i) => row.status,
+      sortable: true,
+      required: true,
+      inputType: "TEXT",
+    },
+    {
+      name: "Reason for Request",
+      key: "referralReason",
+      description: "Enter the reason for the request",
+      selector: (row, i) => row.referralReason,
+      sortable: true,
+      required: true,
+      inputType: "TEXT",
+    },
+    {
+      name: "Actions",
+      key: "action",
+      description: "Enter Action",
+      selector: (row) => (
+        <IconButton size="small" onClick={() => handleConfirmDelete(row)}>
+          <DeleteOutlineIcon fontSize="small" sx={{ color: "red" }} />
+        </IconButton>
+      ),
+      sortable: true,
+      required: true,
+      inputType: "TEXT",
+      width: "100px",
+      center: true,
+    },
+  ];
+  const conditionalRowStyles = [
+    {
+      when: (row) => row.status === "approved",
+      style: {
+        color: "red",
+        "&:hover": {
+          cursor: "pointer",
+        },
+      },
+    },
+    {
+      when: (row) => row.status === "ongoing",
+      style: {
+        color: "rgba(0,0,0,.54)",
+        "&:hover": {
+          cursor: "pointer",
+        },
+      },
+    },
+    {
+      when: (row) => row.status === "pending",
+      style: {
+        color: "pink",
+        "&:hover": {
+          cursor: "pointer",
+        },
+      },
+    },
+    {
+      when: (row) => row.status === "declined",
+      style: {
+        color: "purple",
+        backgroundColor: "green",
+        "&:hover": {
+          cursor: "pointer",
+        },
+      },
+    },
+  ];
+
+  return (
+    <>
+      <CustomConfirmationDialog
+        open={confirmDialog}
+        cancelAction={handleCancelConfirm}
+        confirmationAction={() => handleDelete(docToDel)}
+        message={`Are you sure you want to delete this exit with No: ${docToDel?.sn}`}
+      />
+      {user ? (
+        <>
+          <div className="level">
+            <PageWrapper
+              style={{ flexDirection: "column", padding: "0.6rem 1rem" }}
+            >
+              <TableMenu>
+                <div style={{ display: "flex", alignItems: "center" }}>
+                  {handleSearch && (
+                    <div className="inner-table">
+                      <FilterMenu onSearch={handleSearch} />
+                    </div>
+                  )}
+                  <h2 style={{ margin: "0 10px", fontSize: "0.95rem" }}>
+                    Referral
+                  </h2>
+                  {/* <DatePicker
+                      selected={startDate}
+                      onChange={(date) => handleDate(date)}
+                      dateFormat="dd/MM/yyyy"
+                      placeholderText="Filter By Date"
+                      isClearable
+                    /> */}
+                  {/* <SwitchButton /> */}
+                  {/* <Switch>
+                      <button
+                        value={value}
+                        onClick={() => {
+                          setValue('list');
+                        }}
+                        style={value === 'list' ? activeStyle : {}}
+                      >
+                        <BsList style={{ fontSize: '1rem' }} />
+                      </button>
+                      <button
+                        value={value}
+                        onClick={() => {
+                          setValue('grid');
+                        }}
+                        style={value === 'grid' ? activeStyle : {}}
+                      >
+                        <BsFillGridFill style={{ fontSize: '1rem' }} />
+                      </button>
+                    </Switch> */}
+                </div>
+
+                {handleCreateNew && (
+                  <GlobalCustomButton onClick={handleCreateNew}>
+                    <AddCircleOutline
+                      sx={{ marginRight: "5px" }}
+                      fontSize="small"
+                    />
+                    Add New Referral
+                  </GlobalCustomButton>
+                )}
+              </TableMenu>
+              {value === "list" ? (
+                <CustomTable
+                  title={""}
+                  columns={ReferralSchema}
+                  data={referralListData}
+                  pointerOnHover
+                  highlightOnHover
+                  striped
+                  onRowClicked={handleRow}
+                  progressPending={loading}
+                />
+              ) : (
+                <CalendarGrid appointments={mapFacilities()} />
+              )}
+            </PageWrapper>
+          </div>
+        </>
+      ) : (
+        <div>loading</div>
+      )}
+    </>
+  );
+}

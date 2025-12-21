@@ -1,0 +1,397 @@
+import { useState, useContext, useEffect } from 'react'
+import {
+    Box,
+    Checkbox,
+    FormControlLabel,
+    FormGroup,
+    Grid,
+    Typography,
+} from '@mui/material'
+import { useForm } from 'react-hook-form'
+import { toast } from 'react-toastify'
+import dayjs from 'dayjs'
+
+import client from '../../../feathers'
+import { ObjectContext, UserContext } from '../../../context'
+import { ClientSearch } from '../../../hsmodules/helpers/ClientSearch'
+import EmployeeSearch from '../../../hsmodules/helpers/EmployeeSearch'
+import LocationSearch from '../../../hsmodules/helpers/LocationSearch'
+import ClientPaymentTypeSelect from '../../client-payment/ClientPaymentType'
+import RadioButton from '../../inputs/basic/Radio'
+import MuiDateTimePicker from '../../inputs/DateTime/MuiDateTimePicker'
+import CustomSelect from '../../inputs/basic/Select'
+import Textarea from '../../inputs/basic/Textarea'
+import GlobalCustomButton from '../../buttons/CustomButton'
+
+const AppointmentCreateForTheatre = ({ closeModal, showBillModal }) => {
+    const appointmentsServer = client.service('appointments')
+    const sendSmsServer = client.service('sendsms')
+    const smsServer = client.service('sms')
+    const emailServer = client.service('email')
+    const notificationsServer = client.service('notification')
+    const { state, setState, showActionLoader, hideActionLoader } =
+        useContext(ObjectContext)
+    const { user } = useContext(UserContext)
+    const { register, reset, control, handleSubmit } = useForm({
+        defaultValues: {
+            start_time: dayjs(),
+        },
+    })
+    const [patient, setPatient] = useState(null)
+    const [practioner, setPractitioner] = useState(null)
+    const [location, setLocation] = useState(null)
+    const [paymentMode, setPaymentMode] = useState(null)
+    const [sendMail, setSendMail] = useState(false)
+
+    useEffect(() => {
+        setPatient(state.AppointmentModule.selectedPatient)
+    }, [state.AppointmentModule.selectedPatient])
+
+    const handleGetPatient = patient => {
+        setPatient(patient)
+    }
+
+    const handleGetPractitioner = practioner => {
+        setPractitioner(practioner)
+    }
+
+    const handleGetLocation = location => {
+        setLocation(location)
+    }
+
+    const handleGetPaymentMode = paymentMode => {
+        console.log(paymentMode)
+        setPaymentMode(paymentMode)
+    }
+
+    const generateOTP = () => {
+        var minm = 100000
+        var maxm = 999999
+        const otp = Math.floor(Math.random() * (maxm - minm + 1)) + minm
+        return otp.toString()
+    }
+
+    const handleCloseModal = () => {
+        closeModal()
+        setState(prev => ({
+            ...prev,
+            AppointmentModule: {
+                ...prev.AppointmentModule,
+                selectedPatient: {},
+            },
+        }))
+    }
+
+    // useEffect(() => {
+    //   if(patient.paymentinfo.some(checkHMO)){
+
+    //   }
+    //   else{
+    //     setPaymentMode()
+    //   }
+
+    // }, [patient])
+
+    // Check if user has HMO
+    const checkHMO = obj => obj.paymentmode === 'HMO'
+
+    const handleCreateAppointment = async data => {
+        const employee = user.currentEmployee
+        const facility = employee.facilityDetail
+        const generatedOTP = generateOTP()
+        const isHMO = patient.paymentinfo.some(checkHMO)
+
+        if (!patient) return toast.warning('Please select a Client/Patient')
+        if (!practioner)
+            return toast.warning('Please select a Practitioner/Employee')
+        if (!location) return toast.warning('Please select a Location')
+        if (!paymentMode)
+            return toast.warning(
+                'Please select a Payment Mode for Client/Patient',
+            )
+        if (
+            !state.CommunicationModule.defaultEmail.emailConfig?.username &&
+            sendMail
+        )
+            return setState(prev => ({
+                ...prev,
+                CommunicationModule: {
+                    ...prev.CommunicationModule,
+                    configEmailModal: true,
+                },
+            }))
+
+        showActionLoader()
+
+        if (user.currentEmployee) {
+            data.facility = employee.facilityDetail._id // or from facility dropdown
+        }
+
+        if (paymentMode.paymentmode.toLowerCase() === 'hmo') {
+            data.sponsor = paymentMode?.policy?.sponsor
+            data.hmo = paymentMode?.policy?.organization
+            data.policy = paymentMode?.policy
+        }
+
+        data.locationId = location._id
+        data.practitionerId = practioner._id
+        data.clientId = patient._id
+        data.client = patient
+        data.firstname = patient.firstname
+        data.middlename = patient.middlename
+        data.lastname = patient.lastname
+        data.dob = patient.dob
+        data.gender = patient.gender
+        data.phone = patient.phone
+        data.email = patient.email
+        data.practitioner_name = `${practioner.firstname} ${practioner.lastname}`
+        data.practitioner_profession = practioner.profession
+        data.practitioner_department = practioner.department
+        data.location_name = location.name
+        data.location_type = location.locationType
+        data.otp = generatedOTP
+        data.organization_type = facility.facilityType
+        data.actions = [
+            {
+                status: data.appointment_status,
+                actor: user.currentEmployee._id,
+            },
+        ]
+
+        const notificationObj = {
+            type: 'Clinic',
+            title: `Scheduled ${data.appointmentClass} ${data.appointment_type} Appointment`,
+            description: `You have a schedule appointment with ${patient.firstname} ${
+                patient.lastname
+            } set to take place exactly at ${dayjs(data.start_time).format(
+                'DD/MM/YYYY hh:mm',
+            )} in ${location.name} Clinic for ${data.appointment_reason}`,
+            facilityId: employee.facilityDetail._id,
+            sender: `${employee.firstname} ${employee.lastname}`,
+            senderId: employee._id,
+            pageUrl: '/app/clinic/appointments',
+            priority: 'normal',
+            dest_userId: [practioner._id],
+        }
+
+        const emailObj = {
+            organizationId: facility._id,
+            organizationName: facility.facilityName,
+            html: `<p>You have been scheduled for an appointment with ${
+                practioner.profession
+            } ${practioner.firstname} ${practioner.lastname} at ${dayjs(
+                data.start_time,
+            ).format('DD/MM/YYYY hh:mm')} ${
+                isHMO ? `and your OTP code is ${generatedOTP}` : ''
+            } </p>`,
+
+            text: ``,
+            status: 'pending',
+            subject: `SCHEDULED APPOINTMENT WITH ${facility.facilityName} AT ${dayjs(
+                data.date,
+            ).format('DD/MM/YYYY hh:mm')}`,
+            to: patient.email,
+            name: facility.facilityName,
+            from: state?.CommunicationModule?.defaultEmail?.emailConfig
+                ?.username,
+        }
+
+        const smsObj = {
+            message: `You have been scheduled for an appointment with ${
+                practioner.profession
+            } ${practioner.firstname} ${practioner.lastname} at ${dayjs(
+                data.start_time,
+            ).format('DD/MM/YYYY hh:mm')} ${
+                isHMO ? `and your OTP code is ${generatedOTP}` : ''
+            } `,
+            receiver: patient.phone,
+            facilityName: facility.facilityName,
+            facilityId: facility._id,
+        }
+
+        //console.log(data);
+
+        appointmentsServer
+            .create(data)
+            .then(async res => {
+                hideActionLoader()
+                handleCloseModal()
+                toast.success(
+                    'Appointment created succesfully, Kindly bill patient if required',
+                )
+
+                await notificationsServer.create(notificationObj)
+                await sendSmsServer.create(smsObj)
+                if (sendMail) {
+                    await emailServer.create(emailObj)
+                }
+
+                hideActionLoader()
+
+                if (showBillModal) {
+                    showBillModal(true)
+                }
+            })
+            .catch(err => {
+                hideActionLoader()
+                toast.error('Error creating Appointment ' + err)
+            })
+    }
+
+    return (
+        <Box
+            sx={{
+                width: '70vw',
+            }}
+        >
+            <Grid container spacing={2} mb={1}>
+                <Grid item xs={12} sm={12} md={8} lg={8}>
+                    <ClientSearch
+                        getSearchfacility={handleGetPatient}
+                        id={patient?._id}
+                    />
+                </Grid>
+
+                <Grid item xs={12} sm={12} md={4} lg={4}>
+                    <ClientPaymentTypeSelect
+                        payments={patient?.paymentinfo}
+                        handleChange={handleGetPaymentMode}
+                    />
+                </Grid>
+
+                <Grid item xs={12} sm={12} md={6}>
+                    <EmployeeSearch getSearchfacility={handleGetPractitioner} />
+                </Grid>
+
+                <Grid item xs={12} sm={12} md={6}>
+                    <LocationSearch getSearchfacility={handleGetLocation} />
+                </Grid>
+
+                {/* <Grid item xs={12} sm={12} md={12}>
+                    <RadioButton
+                        name="appointmentClass"
+                        register={register('appointmentClass', {
+                            required: true,
+                        })}
+                        options={['On-site', 'Teleconsultation', 'Home Visit']}
+                    />
+                </Grid> */}
+
+                <Grid item xs={12} sm={12} md={4} lg={4}>
+                    <MuiDateTimePicker
+                        control={control}
+                        name="start_time"
+                        label="Date and Time"
+                        required
+                        important
+                    />
+                </Grid>
+                <Grid item xs={12} sm={12} md={4} lg={4}>
+                    <CustomSelect
+                        control={control}
+                        name="appointment_type"
+                        label="Appointment Type"
+                        required
+                        important
+                        options={['New Procedure', 'Repeat Procedure']}
+                    />
+                </Grid>
+
+                {/* this is good */}
+
+                <Grid item xs={12} sm={12} md={4} lg={4}>
+                    <CustomSelect
+                        required
+                        important
+                        control={control}
+                        name="appointment_status"
+                        label="Appointment Status "
+                        options={[
+                            'Scheduled',
+                            'Confirmed',
+                            'Billed',
+                            'Paid',
+                            'Checked In',
+                            'Checked Out',
+                            'Procedure in Progress',
+                            'Completed Procedure',
+                            'No Show',
+                            'Cancelled',
+                        ]}
+                    />
+                </Grid>
+
+                {/* <Grid item xs={12} sm={12} md={12} lg={12}>
+          <Textarea
+            label="Reason for Appointment"
+            //important
+            register={register("appointment_reason")}
+            type="text"
+            placeholder="write here.."
+          />
+        </Grid> */}
+
+                <Grid item xs={12} sm={12} md={12} lg={12}>
+                    <Textarea
+                        label="Surgical Procedure"
+                        name="surgical_procedure"
+                        //important
+                        register={register('surgical_procedure')}
+                        type="text"
+                        placeholder="write here.."
+                    />
+                </Grid>
+
+                {/* <Grid item xs={12} sm={12} md={12} lg={12}>
+          <Textarea
+            label="Other Information"
+            //important
+            register={register("other_information")}
+            type="text"
+            placeholder="write here.."
+          />
+        </Grid> */}
+            </Grid>
+
+            <Box
+                sx={{
+                    display: 'flex',
+                    gap: 2,
+                }}
+            >
+                <FormGroup>
+                    <FormControlLabel
+                        control={
+                            <Checkbox
+                                size="small"
+                                checked={sendMail}
+                                onChange={e => setSendMail(e.target.checked)}
+                            />
+                        }
+                        label={
+                            <Typography
+                                sx={{
+                                    fontSize: '0.8rem',
+                                }}
+                            >
+                                Send Email To Client
+                            </Typography>
+                        }
+                    />
+                </FormGroup>
+
+                <GlobalCustomButton
+                    onClick={handleSubmit(handleCreateAppointment)}
+                >
+                    Create Appointment
+                </GlobalCustomButton>
+
+                <GlobalCustomButton onClick={handleCloseModal} color="error">
+                    Cancel
+                </GlobalCustomButton>
+            </Box>
+        </Box>
+    )
+}
+
+export default AppointmentCreateForTheatre

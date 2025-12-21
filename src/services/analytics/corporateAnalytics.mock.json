@@ -1,0 +1,35 @@
+{
+  "totalCorporateClients": 48,
+  "activePlans": 42,
+  "totalEnrollees": 3520,
+  "totalRevenue": 125000000,
+  "clientsByIndustry": [
+    { "industry": "Banking", "count": 12, "enrollees": 1200 },
+    { "industry": "Technology", "count": 8, "enrollees": 650 },
+    { "industry": "Manufacturing", "count": 10, "enrollees": 850 },
+    { "industry": "Retail", "count": 7, "enrollees": 420 },
+    { "industry": "Education", "count": 6, "enrollees": 280 },
+    { "industry": "Others", "count": 5, "enrollees": 120 }
+  ],
+  "planDistribution": [
+    { "plan": "Basic", "count": 15, "enrollees": 850 },
+    { "plan": "Standard", "count": 18, "enrollees": 1520 },
+    { "plan": "Premium", "count": 9, "enrollees": 1150 }
+  ],
+  "revenueTrend": [
+    { "month": "Jan", "revenue": 18500000 },
+    { "month": "Feb", "revenue": 19200000 },
+    { "month": "Mar", "revenue": 21000000 },
+    { "month": "Apr", "revenue": 20500000 },
+    { "month": "May", "revenue": 22300000 },
+    { "month": "Jun", "revenue": 23500000 }
+  ],
+  "utilizationRate": [
+    { "month": "Jan", "rate": 65 },
+    { "month": "Feb", "rate": 68 },
+    { "month": "Mar", "rate": 72 },
+    { "month": "Apr", "rate": 70 },
+    { "month": "May", "rate": 75 },
+    { "month": "Jun", "rate": 78 }
+  ]
+}

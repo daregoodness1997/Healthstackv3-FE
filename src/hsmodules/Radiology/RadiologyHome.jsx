@@ -1,0 +1,126 @@
+/* eslint-disable */
+import React, { useState, useEffect, useContext } from 'react';
+import Radiology, { StoreList, StoreListStandalone } from './Radiologys';
+import RadiologyRefactored from './RadiologyRefactored';
+import RadiologyList from './components/RadiologyList';
+import { Outlet, useNavigate } from 'react-router-dom';
+import { UserContext, ObjectContext } from '../../context';
+import ModalBox from '../../components/modal';
+import { Box } from '@mui/material';
+import { toast } from 'react-toastify';
+
+export default function RadiologyHome({ children }) {
+  const { state, setState } = useContext(ObjectContext);
+  const { user, setUser } = useContext(UserContext);
+
+  // Early return if user is not loaded yet
+  if (!user || !user.currentEmployee) {
+    return null;
+  }
+
+  const employeeLocations = user.currentEmployee.locations || [];
+  const radLocations = employeeLocations.filter(
+    (item) => item.locationType === 'Radiology',
+  );
+
+  const location = state.RadiologyModule.selectedRadiology._id
+    ? state.RadiologyModule.selectedRadiology
+    : radLocations[0];
+
+  const [selectedStore, setSelectedStore] = useState(location);
+
+  const navigate = useNavigate();
+
+  const noLocation = () => {
+    toast.error(
+      'You need to set up a Radiology Location to access the Radiology Module',
+    );
+    navigate('/app');
+  };
+
+  useEffect(() => {
+    if (!selectedStore) return noLocation();
+    const notSelected =
+      selectedStore && Object.keys(selectedStore).length === 0;
+
+    if (notSelected) {
+      handleChangeStore();
+    } else {
+      const newEmployeeLocation = {
+        locationName: selectedStore.name,
+        locationType: 'Radiology',
+        locationId: selectedStore._id,
+        facilityId: user.currentEmployee.facilityDetail._id,
+        facilityName: user.currentEmployee.facilityDetail.facilityName,
+        case: 'radiology',
+      };
+
+      setState((prevstate) => ({
+        ...prevstate,
+        employeeLocation: newEmployeeLocation,
+        RadiologyModule: {
+          ...prevstate.RadiologyModule,
+          selectedRadiology: selectedStore,
+        },
+      }));
+    }
+    return () => {};
+  }, []);
+
+  useEffect(() => {
+    setSelectedStore(state.RadiologyModule.selectedRadiology);
+    const newEmployeeLocation = {
+      locationName: state.RadiologyModule.selectedRadiology.name,
+      locationType: state.RadiologyModule.selectedRadiology.locationType,
+      locationId: state.RadiologyModule.selectedRadiology._id,
+      facilityId: user.currentEmployee.facilityDetail._id,
+      facilityName: user.currentEmployee.facilityDetail.facilityName,
+      case: 'radiology', //Added so can be used in the switch case function later to change location..
+    };
+
+    setState((prevstate) => ({
+      ...prevstate,
+      employeeLocation: newEmployeeLocation,
+    }));
+  }, [state.RadiologyModule]);
+
+  const handleChangeStore = async () => {
+    await setState((prev) => ({
+      ...prev,
+      RadiologyModule: { ...prev.RadiologyModule, locationModal: true },
+    }));
+  };
+
+  const handleCloseLocationModal = () => {
+    setState((prev) => ({
+      ...prev,
+      RadiologyModule: { ...prev.RadiologyModule, locationModal: false },
+    }));
+  };
+
+  return (
+    <section className="section remPadTop">
+      <section className="hero is-info is-fullheight">
+        <div className="hero-body">
+          <div className="layout__content-main">
+            <ModalBox open={state.RadiologyModule.locationModal}>
+              <Box
+                sx={{
+                  maxWidth: '700px',
+                  maxHeight: '80vh',
+                }}
+              >
+                <RadiologyList
+                  standalone={true}
+                  closeModal={handleCloseLocationModal}
+                />
+              </Box>
+            </ModalBox>
+            {children}
+            <Outlet />
+          </div>
+        </div>
+      </section>
+    </section>
+  );
+}

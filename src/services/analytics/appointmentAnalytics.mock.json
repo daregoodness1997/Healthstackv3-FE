@@ -1,0 +1,170 @@
+{
+  "stats": [
+    {
+      "id": "total",
+      "title": "Total Appointments",
+      "value": 1848,
+      "change": 4.3,
+      "trend": "up"
+    },
+    {
+      "id": "scheduled",
+      "title": "Appointments Scheduled",
+      "value": 352,
+      "change": 4.3,
+      "trend": "up"
+    },
+    {
+      "id": "followup",
+      "title": "Follow-up Appointments",
+      "value": 658,
+      "change": 1.3,
+      "trend": "down"
+    },
+    {
+      "id": "completed",
+      "title": "Appointments Completed",
+      "value": 858,
+      "change": 4.3,
+      "trend": "up"
+    },
+    {
+      "id": "waiting",
+      "title": "Average Waiting Time",
+      "value": "18 mins",
+      "change": 4.3,
+      "trend": "up"
+    },
+    {
+      "id": "utilization",
+      "title": "Provider Utilization Rate",
+      "value": "63%",
+      "change": 2.1,
+      "trend": "up"
+    },
+    {
+      "id": "conversion",
+      "title": "Conversion Rate",
+      "value": "53%",
+      "change": 1.8,
+      "trend": "down"
+    }
+  ],
+  "statusTimeline": {
+    "labels": [
+      "Jan",
+      "Feb",
+      "Mar",
+      "Apr",
+      "May",
+      "Jun",
+      "Jul",
+      "Aug",
+      "Sep",
+      "Oct",
+      "Nov",
+      "Dec"
+    ],
+    "datasets": [
+      {
+        "label": "Scheduled",
+        "data": [65, 59, 80, 81, 96, 105, 114, 120, 130, 125, 140, 145],
+        "borderColor": "rgb(54, 162, 235)",
+        "backgroundColor": "rgba(54, 162, 235, 0.1)"
+      },
+      {
+        "label": "Completed",
+        "data": [45, 50, 65, 70, 80, 90, 95, 100, 110, 105, 120, 125],
+        "borderColor": "rgb(75, 192, 192)",
+        "backgroundColor": "rgba(75, 192, 192, 0.1)"
+      },
+      {
+        "label": "Cancelled",
+        "data": [10, 9, 15, 11, 16, 15, 19, 20, 20, 20, 20, 20],
+        "borderColor": "rgb(255, 99, 132)",
+        "backgroundColor": "rgba(255, 99, 132, 0.1)"
+      },
+      {
+        "label": "No-Show",
+        "data": [5, 8, 10, 8, 12, 10, 14, 15, 12, 10, 15, 18],
+        "borderColor": "rgb(255, 159, 64)",
+        "backgroundColor": "rgba(255, 159, 64, 0.1)"
+      }
+    ]
+  },
+  "ageDistribution": {
+    "labels": ["0-12", "13-19", "20-39", "36-52", ">40-60", "60+"],
+    "data": [15, 12, 20, 18, 22, 13],
+    "colors": [
+      "#69c0ff",
+      "#ff85c0",
+      "#ffd666",
+      "#95de64",
+      "#b37feb",
+      "#ff7a45"
+    ],
+    "total": 1052,
+    "change": -5.3
+  },
+  "genderDistribution": {
+    "labels": ["Male", "Female"],
+    "data": [45, 55],
+    "colors": ["#597ef7", "#b37feb"],
+    "total": 1052,
+    "change": 8.1
+  },
+  "maritalStatus": {
+    "labels": ["Single", "Married", "Divorced/Separated", "Widowed"],
+    "data": [28, 42, 18, 12],
+    "colors": ["#69c0ff", "#b37feb", "#ff85c0", "#95de64"],
+    "total": 1052,
+    "change": 2.3
+  },
+  "appointmentLocation": {
+    "labels": ["Miami", "Dubai", "Clinic", "Pharmacy", "Radiology", "Home"],
+    "data": [950, 1200, 450, 1050, 1150, 650],
+    "colors": ["#1890ff", "#52c41a", "#faad14", "#f5222d", "#722ed1", "#13c2c2"]
+  },
+  "religionDistribution": {
+    "labels": ["Christian", "Muslim", "Other"],
+    "data": [48, 37, 15],
+    "colors": ["#95de64", "#b37feb", "#ff85c0"],
+    "total": 1052,
+    "change": 10.3
+  },
+  "professionDistribution": {
+    "labels": [
+      "Doctor",
+      "Engineer",
+      "Entrepreneur",
+      "Accountant",
+      "Lawyer",
+      "I. mediator",
+      "Other"
+    ],
+    "data": [950, 1200, 450, 1050, 1150, 800, 600],
+    "colors": [
+      "#b37feb",
+      "#ff85c0",
+      "#ffd666",
+      "#95de64",
+      "#69c0ff",
+      "#ff7a45",
+      "#52c41a"
+    ]
+  },
+  "appointmentType": {
+    "labels": ["New", "Follow up", "Annual checkup", "Walk in"],
+    "data": [25, 35, 20, 20],
+    "colors": ["#69c0ff", "#b37feb", "#ffd666", "#95de64"],
+    "total": 1052,
+    "change": 4.2
+  },
+  "appointmentClass": {
+    "labels": ["VIP", "Regular", "Emergency", "Insurance"],
+    "data": [30, 40, 15, 15],
+    "colors": ["#ff85c0", "#597ef7", "#ff7a45", "#95de64"],
+    "total": 1052,
+    "change": 3.7
+  }
+}

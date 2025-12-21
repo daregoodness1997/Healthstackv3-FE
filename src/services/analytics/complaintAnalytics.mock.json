@@ -1,0 +1,28 @@
+{
+  "totalComplaints": 145,
+  "resolvedComplaints": 98,
+  "pendingComplaints": 32,
+  "escalatedComplaints": 15,
+  "averageResolutionTime": 3.5,
+  "complaintsByCategory": [
+    { "category": "Service Quality", "count": 45 },
+    { "category": "Wait Time", "count": 32 },
+    { "category": "Staff Behavior", "count": 28 },
+    { "category": "Billing Issues", "count": 22 },
+    { "category": "Facility Cleanliness", "count": 18 }
+  ],
+  "complaintsBySeverity": [
+    { "severity": "Low", "count": 65 },
+    { "severity": "Medium", "count": 52 },
+    { "severity": "High", "count": 20 },
+    { "severity": "Critical", "count": 8 }
+  ],
+  "resolutionTrend": [
+    { "month": "Jan", "received": 22, "resolved": 18 },
+    { "month": "Feb", "received": 25, "resolved": 20 },
+    { "month": "Mar", "received": 28, "resolved": 24 },
+    { "month": "Apr", "received": 24, "resolved": 22 },
+    { "month": "May", "received": 23, "resolved": 20 },
+    { "month": "Jun", "received": 23, "resolved": 19 }
+  ]
+}

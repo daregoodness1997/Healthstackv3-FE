@@ -1,0 +1,29 @@
+{
+  "totalSurgeries": 856,
+  "scheduledSurgeries": 124,
+  "completedSurgeries": 732,
+  "averageDuration": 2.5,
+  "surgeriesByType": [
+    { "type": "General Surgery", "count": 245 },
+    { "type": "Orthopedic", "count": 189 },
+    { "type": "Obstetrics", "count": 156 },
+    { "type": "Gynecology", "count": 124 },
+    { "type": "Urology", "count": 89 },
+    { "type": "ENT", "count": 53 }
+  ],
+  "surgeriesByStatus": [
+    { "status": "Completed", "count": 732 },
+    { "status": "Scheduled", "count": 124 },
+    { "status": "In Progress", "count": 12 },
+    { "status": "Cancelled", "count": 23 }
+  ],
+  "monthlySurgeries": [
+    { "month": "Jan", "count": 138 },
+    { "month": "Feb", "count": 125 },
+    { "month": "Mar", "count": 156 },
+    { "month": "Apr", "count": 142 },
+    { "month": "May", "count": 167 },
+    { "month": "Jun", "count": 149 }
+  ],
+  "theatreUtilization": 78.5
+}

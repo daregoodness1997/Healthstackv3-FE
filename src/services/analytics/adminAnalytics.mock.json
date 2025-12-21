@@ -1,0 +1,35 @@
+{
+  "totalUsers": 342,
+  "activeUsers": 287,
+  "totalFacilities": 12,
+  "totalModules": 24,
+  "usersByRole": [
+    { "role": "Doctor", "count": 85 },
+    { "role": "Nurse", "count": 120 },
+    { "role": "Admin", "count": 45 },
+    { "role": "Pharmacist", "count": 32 },
+    { "role": "Lab Technician", "count": 28 },
+    { "role": "Receptionist", "count": 32 }
+  ],
+  "facilitiesByType": [
+    { "type": "Hospital", "count": 4 },
+    { "type": "Clinic", "count": 6 },
+    { "type": "Laboratory", "count": 2 }
+  ],
+  "systemActivity": [
+    { "date": "Jan", "logins": 1250, "actions": 8500 },
+    { "date": "Feb", "logins": 1320, "actions": 8800 },
+    { "date": "Mar", "logins": 1400, "actions": 9200 },
+    { "date": "Apr", "logins": 1380, "actions": 9000 },
+    { "date": "May", "logins": 1450, "actions": 9500 },
+    { "date": "Jun", "logins": 1500, "actions": 9800 }
+  ],
+  "moduleUsage": [
+    { "module": "Client", "usage": 95 },
+    { "module": "Clinic", "usage": 88 },
+    { "module": "Pharmacy", "usage": 82 },
+    { "module": "Laboratory", "usage": 75 },
+    { "module": "Finance", "usage": 68 },
+    { "module": "Inventory", "usage": 62 }
+  ]
+}

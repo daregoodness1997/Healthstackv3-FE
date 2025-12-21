@@ -1,0 +1,29 @@
+{
+  "totalRevenue": 8450000,
+  "totalExpenses": 5230000,
+  "netProfit": 3220000,
+  "outstandingPayments": 1245000,
+  "revenueByDepartment": [
+    { "department": "Clinic", "revenue": 2450000 },
+    { "department": "Pharmacy", "revenue": 1850000 },
+    { "department": "Laboratory", "revenue": 1340000 },
+    { "department": "Radiology", "revenue": 980000 },
+    { "department": "Ward", "revenue": 890000 },
+    { "department": "Theatre", "revenue": 940000 }
+  ],
+  "expensesByCategory": [
+    { "category": "Salaries", "amount": 2100000 },
+    { "category": "Supplies", "amount": 1450000 },
+    { "category": "Equipment", "amount": 820000 },
+    { "category": "Utilities", "amount": 450000 },
+    { "category": "Maintenance", "amount": 410000 }
+  ],
+  "monthlyRevenue": [
+    { "month": "Jan", "revenue": 1280000 },
+    { "month": "Feb", "revenue": 1320000 },
+    { "month": "Mar", "revenue": 1450000 },
+    { "month": "Apr", "revenue": 1380000 },
+    { "month": "May", "revenue": 1520000 },
+    { "month": "Jun", "revenue": 1500000 }
+  ]
+}

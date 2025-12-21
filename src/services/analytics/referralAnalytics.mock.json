@@ -1,0 +1,29 @@
+{
+  "totalReferrals": 3456,
+  "outgoingReferrals": 2124,
+  "incomingReferrals": 1332,
+  "pendingReferrals": 245,
+  "referralsBySpecialty": [
+    { "specialty": "Cardiology", "count": 456 },
+    { "specialty": "Neurology", "count": 389 },
+    { "specialty": "Orthopedics", "count": 342 },
+    { "specialty": "Oncology", "count": 298 },
+    { "specialty": "Nephrology", "count": 267 },
+    { "specialty": "Gastroenterology", "count": 234 }
+  ],
+  "referralsByStatus": [
+    { "status": "Completed", "count": 2856 },
+    { "status": "Pending", "count": 245 },
+    { "status": "In Progress", "count": 298 },
+    { "status": "Cancelled", "count": 57 }
+  ],
+  "monthlyReferrals": [
+    { "month": "Jan", "outgoing": 345, "incoming": 212 },
+    { "month": "Feb", "outgoing": 367, "incoming": 198 },
+    { "month": "Mar", "outgoing": 389, "incoming": 234 },
+    { "month": "Apr", "outgoing": 356, "incoming": 223 },
+    { "month": "May", "outgoing": 398, "incoming": 256 },
+    { "month": "Jun", "outgoing": 369, "incoming": 209 }
+  ],
+  "acceptanceRate": 89.5
+}

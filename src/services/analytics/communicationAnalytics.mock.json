@@ -1,0 +1,26 @@
+{
+  "totalMessages": 8456,
+  "sentMessages": 4285,
+  "receivedMessages": 4171,
+  "averageResponseTime": 18,
+  "messagesByChannel": [
+    { "channel": "SMS", "count": 3825 },
+    { "channel": "Email", "count": 2486 },
+    { "channel": "WhatsApp", "count": 1685 },
+    { "channel": "In-App", "count": 460 }
+  ],
+  "messagesByStatus": [
+    { "status": "Delivered", "count": 6842 },
+    { "status": "Pending", "count": 856 },
+    { "status": "Failed", "count": 485 },
+    { "status": "Read", "count": 273 }
+  ],
+  "dailyMessages": [
+    { "date": "Jan", "count": 1285 },
+    { "date": "Feb", "count": 1342 },
+    { "date": "Mar", "count": 1425 },
+    { "date": "Apr", "count": 1385 },
+    { "date": "May", "count": 1486 },
+    { "date": "Jun", "count": 1533 }
+  ]
+}

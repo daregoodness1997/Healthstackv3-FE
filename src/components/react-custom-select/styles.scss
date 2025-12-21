@@ -1,0 +1,36 @@
+.react-custom-select-container {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  height: fit-content;
+  position: relative;
+
+  .label {
+    position: absolute;
+    top: -1.25rem;
+    left: 0.8rem;
+    padding: 0px 0.25rem;
+    background-color: rgb(255, 255, 255);
+    transition: all 0.4s ease 0s;
+    font-size: 0.75rem;
+    color: #2d2d2d;
+    z-index: 9;
+  }
+
+  .css-olqui2-singleValue {
+    color: #000000 !important;
+    //font-size: 0.75rem;
+  }
+
+  .custom-select-error-text {
+    height: 15px;
+    font-family: "Gilroy-Medium";
+    font-size: 11px;
+    line-height: 18px;
+    display: flex;
+    align-items: center;
+    color: #f03030;
+    margin-left: 10px;
+  }
+}

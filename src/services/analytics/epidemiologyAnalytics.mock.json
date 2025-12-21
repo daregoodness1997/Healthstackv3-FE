@@ -1,0 +1,30 @@
+{
+  "totalCases": 2456,
+  "activeCases": 485,
+  "resolvedCases": 1856,
+  "outbreakAlerts": 3,
+  "casesByDisease": [
+    { "disease": "Malaria", "count": 856 },
+    { "disease": "Typhoid", "count": 425 },
+    { "disease": "COVID-19", "count": 342 },
+    { "disease": "Tuberculosis", "count": 286 },
+    { "disease": "Cholera", "count": 186 },
+    { "disease": "Dengue", "count": 145 },
+    { "disease": "Others", "count": 216 }
+  ],
+  "casesByRegion": [
+    { "region": "North", "count": 685 },
+    { "region": "South", "count": 542 },
+    { "region": "East", "count": 486 },
+    { "region": "West", "count": 425 },
+    { "region": "Central", "count": 318 }
+  ],
+  "trendsOverTime": [
+    { "date": "Jan", "cases": 385 },
+    { "date": "Feb", "cases": 425 },
+    { "date": "Mar", "cases": 398 },
+    { "date": "Apr", "cases": 442 },
+    { "date": "May", "cases": 405 },
+    { "date": "Jun", "cases": 401 }
+  ]
+}

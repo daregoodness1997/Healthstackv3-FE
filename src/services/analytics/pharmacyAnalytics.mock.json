@@ -1,0 +1,146 @@
+{
+  "stats": [
+    {
+      "id": "total-sales",
+      "title": "Total Sales",
+      "value": "₦45.2M",
+      "change": 18.5,
+      "trend": "up"
+    },
+    {
+      "id": "prescriptions-filled",
+      "title": "Prescriptions Filled",
+      "value": "5,678",
+      "change": 12.3,
+      "trend": "up"
+    },
+    {
+      "id": "stock-value",
+      "title": "Stock Value",
+      "value": "₦28.5M",
+      "change": 5.7,
+      "trend": "up"
+    },
+    {
+      "id": "low-stock-items",
+      "title": "Low Stock Items",
+      "value": "45",
+      "change": -8.2,
+      "trend": "down"
+    }
+  ],
+  "salesTimeline": {
+    "labels": ["Jan", "Feb", "Mar", "Apr", "May", "Jun"],
+    "datasets": [
+      {
+        "label": "Sales Revenue",
+        "data": [6500000, 7200000, 7800000, 7500000, 8100000, 8100000],
+        "borderColor": "rgb(75, 192, 192)",
+        "backgroundColor": "rgba(75, 192, 192, 0.2)"
+      },
+      {
+        "label": "Cost of Goods",
+        "data": [4200000, 4600000, 5000000, 4800000, 5200000, 5200000],
+        "borderColor": "rgb(255, 99, 132)",
+        "backgroundColor": "rgba(255, 99, 132, 0.2)"
+      }
+    ]
+  },
+  "drugCategoryDistribution": {
+    "labels": [
+      "Antibiotics",
+      "Analgesics",
+      "Antimalarials",
+      "Vitamins",
+      "Antihypertensives",
+      "Others"
+    ],
+    "data": [1500, 1200, 980, 850, 780, 368],
+    "colors": [
+      "#FF6384",
+      "#36A2EB",
+      "#FFCE56",
+      "#4BC0C0",
+      "#9966FF",
+      "#FF9F40"
+    ],
+    "total": 5678,
+    "change": 12.3
+  },
+  "topSellingDrugs": {
+    "labels": [
+      "Paracetamol",
+      "Amoxicillin",
+      "Chloroquine",
+      "Ibuprofen",
+      "Multivitamin"
+    ],
+    "data": [850, 720, 650, 580, 420],
+    "colors": ["#FF6384", "#36A2EB", "#FFCE56", "#4BC0C0", "#9966FF"],
+    "total": 3220,
+    "change": 15.7
+  },
+  "prescriptionTypeDistribution": {
+    "labels": ["Outpatient", "Inpatient", "Emergency", "Referral"],
+    "data": [3200, 1500, 678, 300],
+    "colors": ["#36A2EB", "#FF6384", "#FFCE56", "#4BC0C0"],
+    "total": 5678,
+    "change": 12.3
+  },
+  "paymentMethodDistribution": {
+    "labels": ["Cash", "Card", "Insurance", "Mobile Money", "Credit"],
+    "data": [2400, 1800, 1000, 350, 128],
+    "colors": ["#4BC0C0", "#36A2EB", "#FF6384", "#FFCE56", "#9966FF"],
+    "total": 5678,
+    "change": 12.3
+  },
+  "stockLevelTrends": {
+    "labels": ["Jan", "Feb", "Mar", "Apr", "May", "Jun"],
+    "datasets": [
+      {
+        "label": "In Stock",
+        "data": [450, 470, 455, 480, 465, 472],
+        "borderColor": "rgb(75, 192, 192)",
+        "backgroundColor": "rgba(75, 192, 192, 0.2)"
+      },
+      {
+        "label": "Low Stock",
+        "data": [65, 58, 62, 55, 48, 45],
+        "borderColor": "rgb(255, 206, 86)",
+        "backgroundColor": "rgba(255, 206, 86, 0.2)"
+      },
+      {
+        "label": "Out of Stock",
+        "data": [12, 10, 8, 7, 5, 3],
+        "borderColor": "rgb(255, 99, 132)",
+        "backgroundColor": "rgba(255, 99, 132, 0.2)"
+      }
+    ]
+  },
+  "expiryAlerts": {
+    "labels": [
+      "Expires in 30 days",
+      "Expires in 60 days",
+      "Expires in 90 days",
+      "Expired"
+    ],
+    "data": [15, 28, 42, 8],
+    "colors": ["#FF6384", "#FF9F40", "#FFCE56", "#4BC0C0"],
+    "total": 93,
+    "change": -12.5
+  },
+  "patientTypeDistribution": {
+    "labels": ["Walk-in", "Insured", "Corporate", "Government"],
+    "data": [2800, 1900, 680, 298],
+    "colors": ["#36A2EB", "#4BC0C0", "#FFCE56", "#FF6384"],
+    "total": 5678,
+    "change": 12.3
+  },
+  "revenueByDepartment": {
+    "labels": ["Outpatient", "Inpatient", "Emergency", "Laboratory", "Clinic"],
+    "data": [18500000, 12800000, 6200000, 4800000, 2900000],
+    "colors": ["#FF6384", "#36A2EB", "#FFCE56", "#4BC0C0", "#9966FF"],
+    "total": 45200000,
+    "change": 18.5
+  }
+}

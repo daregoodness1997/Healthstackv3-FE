@@ -1,0 +1,29 @@
+{
+  "totalProviders": 245,
+  "activeContracts": 189,
+  "pendingContracts": 32,
+  "partnershipValue": 15600000,
+  "providersByType": [
+    { "type": "Specialist Clinics", "count": 78 },
+    { "type": "Diagnostic Centers", "count": 56 },
+    { "type": "Pharmacies", "count": 45 },
+    { "type": "Laboratories", "count": 34 },
+    { "type": "Imaging Centers", "count": 32 }
+  ],
+  "referralsByProvider": [
+    { "provider": "City Specialist Hospital", "referrals": 456 },
+    { "provider": "MedLab Diagnostics", "referrals": 389 },
+    { "provider": "CarePlus Clinic", "referrals": 324 },
+    { "provider": "HealthFirst Pharmacy", "referrals": 298 },
+    { "provider": "Scan Center", "referrals": 256 }
+  ],
+  "monthlyReferrals": [
+    { "month": "Jan", "referrals": 245 },
+    { "month": "Feb", "referrals": 267 },
+    { "month": "Mar", "referrals": 289 },
+    { "month": "Apr", "referrals": 256 },
+    { "month": "May", "referrals": 298 },
+    { "month": "Jun", "referrals": 278 }
+  ],
+  "satisfactionScore": 4.3
+}

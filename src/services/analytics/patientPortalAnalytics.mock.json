@@ -1,0 +1,41 @@
+{
+  "totalPortalUsers": 2850,
+  "activeUsers": 2320,
+  "newRegistrations": 145,
+  "appointmentsBooked": 1248,
+  "prescriptionRefills": 685,
+  "billPayments": 542,
+  "labResultsViewed": 896,
+  "averageSessionDuration": 8.5,
+  "userEngagementByFeature": [
+    { "feature": "View Medical Records", "users": 2150, "usage": 92 },
+    { "feature": "Book Appointment", "users": 1890, "usage": 81 },
+    { "feature": "View Lab Results", "users": 1620, "usage": 70 },
+    { "feature": "Prescription Refill", "users": 1350, "usage": 58 },
+    { "feature": "Bill Payment", "users": 1120, "usage": 48 },
+    { "feature": "Telemedicine", "users": 850, "usage": 37 }
+  ],
+  "registrationTrend": [
+    { "month": "Jan", "registrations": 185 },
+    { "month": "Feb", "registrations": 198 },
+    { "month": "Mar", "registrations": 210 },
+    { "month": "Apr", "registrations": 225 },
+    { "month": "May", "registrations": 242 },
+    { "month": "Jun", "registrations": 258 }
+  ],
+  "activityTrend": [
+    { "month": "Jan", "logins": 8500, "actions": 25600 },
+    { "month": "Feb", "logins": 9200, "actions": 27800 },
+    { "month": "Mar", "logins": 9800, "actions": 29500 },
+    { "month": "Apr", "logins": 10200, "actions": 31200 },
+    { "month": "May", "logins": 10800, "actions": 33500 },
+    { "month": "Jun", "logins": 11500, "actions": 35800 }
+  ],
+  "userSatisfaction": 4.3,
+  "supportTickets": {
+    "total": 285,
+    "resolved": 248,
+    "pending": 32,
+    "averageResolutionTime": 4.2
+  }
+}

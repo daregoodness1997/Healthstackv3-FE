@@ -1,0 +1,118 @@
+{
+  "stats": [
+    {
+      "id": "total-clients",
+      "title": "Total Clients",
+      "value": "12,456",
+      "change": 12.5,
+      "trend": "up"
+    },
+    {
+      "id": "new-clients",
+      "title": "New Clients",
+      "value": "1,234",
+      "change": 8.2,
+      "trend": "up"
+    },
+    {
+      "id": "active-clients",
+      "title": "Active Clients",
+      "value": "8,965",
+      "change": 5.7,
+      "trend": "up"
+    },
+    {
+      "id": "inactive-clients",
+      "title": "Inactive Clients",
+      "value": "3,491",
+      "change": -3.2,
+      "trend": "down"
+    }
+  ],
+  "registrationTimeline": {
+    "labels": ["Jan", "Feb", "Mar", "Apr", "May", "Jun"],
+    "datasets": [
+      {
+        "label": "New Registrations",
+        "data": [850, 920, 1050, 980, 1100, 1234],
+        "borderColor": "rgb(75, 192, 192)",
+        "backgroundColor": "rgba(75, 192, 192, 0.2)"
+      },
+      {
+        "label": "Active",
+        "data": [7200, 7500, 7800, 8100, 8500, 8965],
+        "borderColor": "rgb(54, 162, 235)",
+        "backgroundColor": "rgba(54, 162, 235, 0.2)"
+      }
+    ]
+  },
+  "ageDistribution": {
+    "labels": ["0-18", "19-30", "31-45", "46-60", "61+"],
+    "data": [1200, 3500, 4200, 2400, 1156],
+    "colors": ["#FF6384", "#36A2EB", "#FFCE56", "#4BC0C0", "#9966FF"],
+    "total": 12456,
+    "change": 12.5
+  },
+  "genderDistribution": {
+    "labels": ["Male", "Female", "Other"],
+    "data": [5800, 6400, 256],
+    "colors": ["#36A2EB", "#FF6384", "#FFCE56"],
+    "total": 12456,
+    "change": 12.5
+  },
+  "maritalStatus": {
+    "labels": ["Single", "Married", "Divorced", "Widowed"],
+    "data": [4200, 6800, 980, 476],
+    "colors": ["#FF6384", "#36A2EB", "#FFCE56", "#4BC0C0"],
+    "total": 12456,
+    "change": 12.5
+  },
+  "clientLocation": {
+    "labels": ["Lagos", "Abuja", "Port Harcourt", "Ibadan", "Kano", "Others"],
+    "data": [4200, 2800, 1900, 1500, 1200, 856],
+    "colors": [
+      "#FF6384",
+      "#36A2EB",
+      "#FFCE56",
+      "#4BC0C0",
+      "#9966FF",
+      "#FF9F40"
+    ],
+    "total": 12456,
+    "change": 12.5
+  },
+  "religionDistribution": {
+    "labels": ["Christianity", "Islam", "Traditional", "Others"],
+    "data": [7200, 4500, 456, 300],
+    "colors": ["#36A2EB", "#4BC0C0", "#FFCE56", "#FF6384"],
+    "total": 12456,
+    "change": 12.5
+  },
+  "professionDistribution": {
+    "labels": [
+      "Professional",
+      "Business",
+      "Student",
+      "Civil Servant",
+      "Others"
+    ],
+    "data": [3200, 2800, 2400, 2600, 1456],
+    "colors": ["#FF6384", "#36A2EB", "#FFCE56", "#4BC0C0", "#9966FF"],
+    "total": 12456,
+    "change": 12.5
+  },
+  "clientType": {
+    "labels": ["Individual", "Corporate", "Insurance", "Family"],
+    "data": [7200, 2400, 1800, 1056],
+    "colors": ["#36A2EB", "#FFCE56", "#4BC0C0", "#FF6384"],
+    "total": 12456,
+    "change": 12.5
+  },
+  "clientStatus": {
+    "labels": ["Active", "Inactive", "Suspended"],
+    "data": [8965, 3200, 291],
+    "colors": ["#4BC0C0", "#FFCE56", "#FF6384"],
+    "total": 12456,
+    "change": 12.5
+  }
+}

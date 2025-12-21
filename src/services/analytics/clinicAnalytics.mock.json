@@ -1,0 +1,147 @@
+{
+  "stats": [
+    {
+      "id": "total-consultations",
+      "title": "Total Consultations",
+      "value": "8,456",
+      "change": 15.3,
+      "trend": "up"
+    },
+    {
+      "id": "todays-consultations",
+      "title": "Today's Consultations",
+      "value": "234",
+      "change": 8.7,
+      "trend": "up"
+    },
+    {
+      "id": "average-wait-time",
+      "title": "Avg Wait Time",
+      "value": "35 mins",
+      "change": -12.5,
+      "trend": "down"
+    },
+    {
+      "id": "doctor-utilization",
+      "title": "Doctor Utilization",
+      "value": "82%",
+      "change": 5.2,
+      "trend": "up"
+    }
+  ],
+  "consultationTimeline": {
+    "labels": ["Jan", "Feb", "Mar", "Apr", "May", "Jun"],
+    "datasets": [
+      {
+        "label": "Consultations",
+        "data": [1200, 1350, 1280, 1450, 1520, 1654],
+        "borderColor": "rgb(75, 192, 192)",
+        "backgroundColor": "rgba(75, 192, 192, 0.2)"
+      },
+      {
+        "label": "Follow-ups",
+        "data": [450, 520, 480, 550, 580, 602],
+        "borderColor": "rgb(54, 162, 235)",
+        "backgroundColor": "rgba(54, 162, 235, 0.2)"
+      }
+    ]
+  },
+  "diagnosisDistribution": {
+    "labels": [
+      "Hypertension",
+      "Diabetes",
+      "Malaria",
+      "Typhoid",
+      "Respiratory",
+      "Others"
+    ],
+    "data": [1800, 1500, 1200, 900, 800, 2256],
+    "colors": [
+      "#FF6384",
+      "#36A2EB",
+      "#FFCE56",
+      "#4BC0C0",
+      "#9966FF",
+      "#FF9F40"
+    ],
+    "total": 8456,
+    "change": 15.3
+  },
+  "departmentDistribution": {
+    "labels": [
+      "General Practice",
+      "Cardiology",
+      "Pediatrics",
+      "Internal Medicine",
+      "Others"
+    ],
+    "data": [3200, 1800, 1500, 1200, 756],
+    "colors": ["#36A2EB", "#FF6384", "#FFCE56", "#4BC0C0", "#9966FF"],
+    "total": 8456,
+    "change": 15.3
+  },
+  "patientTypeDistribution": {
+    "labels": ["New Patient", "Returning Patient", "Emergency"],
+    "data": [2400, 5500, 556],
+    "colors": ["#FF6384", "#36A2EB", "#FFCE56"],
+    "total": 8456,
+    "change": 15.3
+  },
+  "consultationTypeDistribution": {
+    "labels": ["Walk-in", "Scheduled", "Emergency", "Telemedicine"],
+    "data": [3200, 4000, 800, 456],
+    "colors": ["#36A2EB", "#4BC0C0", "#FF6384", "#FFCE56"],
+    "total": 8456,
+    "change": 15.3
+  },
+  "vitalSignsTrends": {
+    "labels": ["Jan", "Feb", "Mar", "Apr", "May", "Jun"],
+    "datasets": [
+      {
+        "label": "Normal BP",
+        "data": [85, 87, 86, 88, 89, 90],
+        "borderColor": "rgb(75, 192, 192)",
+        "backgroundColor": "rgba(75, 192, 192, 0.2)"
+      },
+      {
+        "label": "High BP",
+        "data": [15, 13, 14, 12, 11, 10],
+        "borderColor": "rgb(255, 99, 132)",
+        "backgroundColor": "rgba(255, 99, 132, 0.2)"
+      }
+    ]
+  },
+  "waitTimeDistribution": {
+    "labels": [
+      "0-15 mins",
+      "16-30 mins",
+      "31-45 mins",
+      "46-60 mins",
+      "60+ mins"
+    ],
+    "data": [2800, 3200, 1800, 500, 156],
+    "colors": ["#4BC0C0", "#36A2EB", "#FFCE56", "#FF9F40", "#FF6384"],
+    "total": 8456,
+    "change": -12.5
+  },
+  "doctorPerformance": {
+    "labels": [
+      "Dr. Smith",
+      "Dr. Johnson",
+      "Dr. Williams",
+      "Dr. Brown",
+      "Others"
+    ],
+    "data": [1800, 1600, 1400, 1200, 2456],
+    "colors": ["#FF6384", "#36A2EB", "#FFCE56", "#4BC0C0", "#9966FF"],
+    "total": 8456,
+    "change": 15.3
+  },
+  "outcomeDistribution": {
+    "labels": ["Discharged", "Admitted", "Referred", "Follow-up"],
+    "data": [6200, 800, 600, 856],
+    "colors": ["#4BC0C0", "#FF6384", "#FFCE56", "#36A2EB"],
+    "total": 8456,
+    "change": 15.3
+  }
+}

@@ -1,0 +1,26 @@
+{
+  "totalEnrollees": 12456,
+  "activePlans": 856,
+  "totalClaims": 3245,
+  "claimsApprovalRate": 87.5,
+  "claimsByStatus": [
+    { "status": "Approved", "count": 2839 },
+    { "status": "Pending", "count": 245 },
+    { "status": "Rejected", "count": 161 }
+  ],
+  "enrolleesByPlan": [
+    { "plan": "Bronze", "count": 3456 },
+    { "plan": "Silver", "count": 4824 },
+    { "plan": "Gold", "count": 2856 },
+    { "plan": "Platinum", "count": 1320 }
+  ],
+  "monthlyClaims": [
+    { "month": "Jan", "claims": 512, "amount": 4250000 },
+    { "month": "Feb", "claims": 489, "amount": 3980000 },
+    { "month": "Mar", "claims": 567, "amount": 4670000 },
+    { "month": "Apr", "claims": 534, "amount": 4320000 },
+    { "month": "May", "claims": 598, "amount": 4890000 },
+    { "month": "Jun", "claims": 545, "amount": 4450000 }
+  ],
+  "utilizationRate": 72.3
+}

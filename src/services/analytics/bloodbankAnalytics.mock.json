@@ -1,0 +1,33 @@
+{
+  "totalUnits": 2450,
+  "availableUnits": 1856,
+  "issuedUnits": 594,
+  "expiringUnits": [
+    { "bloodGroup": "A+", "units": 12, "expiryDate": "2025-01-15" },
+    { "bloodGroup": "O+", "units": 8, "expiryDate": "2025-01-18" },
+    { "bloodGroup": "B+", "units": 5, "expiryDate": "2025-01-20" }
+  ],
+  "unitsByBloodGroup": [
+    { "bloodGroup": "O+", "units": 485 },
+    { "bloodGroup": "A+", "units": 425 },
+    { "bloodGroup": "B+", "units": 358 },
+    { "bloodGroup": "AB+", "units": 186 },
+    { "bloodGroup": "O-", "units": 142 },
+    { "bloodGroup": "A-", "units": 128 },
+    { "bloodGroup": "B-", "units": 95 },
+    { "bloodGroup": "AB-", "units": 45 }
+  ],
+  "donorsByType": [
+    { "type": "Voluntary", "count": 682 },
+    { "type": "Family Replacement", "count": 284 },
+    { "type": "Paid", "count": 126 }
+  ],
+  "dailyIssuance": [
+    { "date": "Jan", "units": 92 },
+    { "date": "Feb", "units": 88 },
+    { "date": "Mar", "units": 96 },
+    { "date": "Apr", "units": 102 },
+    { "date": "May", "units": 98 },
+    { "date": "Jun", "units": 118 }
+  ]
+}

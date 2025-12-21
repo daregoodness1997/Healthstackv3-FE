@@ -1,0 +1,21 @@
+{
+  "totalPatients": 856,
+  "activePatients": 742,
+  "newEnrollments": 48,
+  "adherenceRate": 92,
+  "viralLoadSuppression": 88,
+  "patientsByRegimenType": [
+    { "regimen": "First Line", "count": 520 },
+    { "regimen": "Second Line", "count": 186 },
+    { "regimen": "Third Line", "count": 64 },
+    { "regimen": "Pediatric", "count": 86 }
+  ],
+  "monthlyEnrollments": [
+    { "month": "Jan", "count": 42 },
+    { "month": "Feb", "count": 38 },
+    { "month": "Mar", "count": 45 },
+    { "month": "Apr", "count": 52 },
+    { "month": "May", "count": 48 },
+    { "month": "Jun", "count": 48 }
+  ]
+}

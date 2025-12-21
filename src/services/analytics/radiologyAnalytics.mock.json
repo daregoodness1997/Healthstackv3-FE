@@ -1,0 +1,28 @@
+{
+  "totalScans": 2456,
+  "pendingScans": 145,
+  "completedScans": 2311,
+  "averageReportTime": 3.5,
+  "scansByModality": [
+    { "modality": "X-Ray", "count": 1024 },
+    { "modality": "CT Scan", "count": 567 },
+    { "modality": "MRI", "count": 342 },
+    { "modality": "Ultrasound", "count": 389 },
+    { "modality": "Mammography", "count": 134 }
+  ],
+  "scansByBodyPart": [
+    { "bodyPart": "Chest", "count": 645 },
+    { "bodyPart": "Abdomen", "count": 456 },
+    { "bodyPart": "Head", "count": 389 },
+    { "bodyPart": "Spine", "count": 342 },
+    { "bodyPart": "Extremities", "count": 624 }
+  ],
+  "dailyScans": [
+    { "date": "2024-06-01", "count": 42 },
+    { "date": "2024-06-02", "count": 48 },
+    { "date": "2024-06-03", "count": 38 },
+    { "date": "2024-06-04", "count": 45 },
+    { "date": "2024-06-05", "count": 52 },
+    { "date": "2024-06-06", "count": 41 }
+  ]
+}

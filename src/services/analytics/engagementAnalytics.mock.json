@@ -1,0 +1,32 @@
+{
+  "totalPatients": 4520,
+  "activePatients": 3850,
+  "newPatients": 285,
+  "returningPatients": 3565,
+  "engagementRate": 78,
+  "appointmentAttendance": 85,
+  "engagementByChannel": [
+    { "channel": "Mobile App", "users": 2150, "engagement": 85 },
+    { "channel": "Web Portal", "users": 1320, "engagement": 72 },
+    { "channel": "SMS", "users": 890, "engagement": 65 },
+    { "channel": "Email", "users": 160, "engagement": 45 }
+  ],
+  "featureUsage": [
+    { "feature": "Appointment Booking", "usage": 92 },
+    { "feature": "Medical Records", "usage": 78 },
+    { "feature": "Prescription Refill", "usage": 68 },
+    { "feature": "Lab Results", "usage": 62 },
+    { "feature": "Bill Payment", "usage": 55 },
+    { "feature": "Telemedicine", "usage": 42 }
+  ],
+  "engagementTrend": [
+    { "month": "Jan", "active": 3200, "engaged": 2400 },
+    { "month": "Feb", "active": 3350, "engaged": 2550 },
+    { "month": "Mar", "active": 3500, "engaged": 2700 },
+    { "month": "Apr", "active": 3650, "engaged": 2800 },
+    { "month": "May", "active": 3750, "engaged": 2900 },
+    { "month": "Jun", "active": 3850, "engaged": 3000 }
+  ],
+  "satisfactionScore": 4.2,
+  "npsScore": 68
+}

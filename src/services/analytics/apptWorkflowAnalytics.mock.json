@@ -1,0 +1,26 @@
+{
+  "totalWorkflows": 1248,
+  "activeWorkflows": 342,
+  "completedWorkflows": 856,
+  "averageCompletionTime": 45,
+  "workflowsByStatus": [
+    { "status": "Pending", "count": 342 },
+    { "status": "In Progress", "count": 186 },
+    { "status": "Completed", "count": 856 },
+    { "status": "Cancelled", "count": 64 }
+  ],
+  "workflowsByType": [
+    { "type": "New Appointment", "count": 485 },
+    { "type": "Follow-up", "count": 325 },
+    { "type": "Emergency", "count": 158 },
+    { "type": "Consultation", "count": 280 }
+  ],
+  "completionRateTrend": [
+    { "date": "Jan", "completed": 120, "total": 145 },
+    { "date": "Feb", "completed": 135, "total": 160 },
+    { "date": "Mar", "completed": 142, "total": 168 },
+    { "date": "Apr", "completed": 138, "total": 165 },
+    { "date": "May", "completed": 156, "total": 182 },
+    { "date": "Jun", "completed": 165, "total": 188 }
+  ]
+}

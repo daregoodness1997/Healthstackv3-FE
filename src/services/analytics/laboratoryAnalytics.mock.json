@@ -1,0 +1,29 @@
+{
+  "totalTests": 5842,
+  "pendingTests": 324,
+  "completedTests": 5518,
+  "averageTurnaroundTime": 4.5,
+  "testsByType": [
+    { "test": "Blood Chemistry", "count": 1456 },
+    { "test": "Hematology", "count": 1245 },
+    { "test": "Microbiology", "count": 856 },
+    { "test": "Serology", "count": 742 },
+    { "test": "Urinalysis", "count": 624 },
+    { "test": "Parasitology", "count": 512 },
+    { "test": "Histopathology", "count": 407 }
+  ],
+  "testsByStatus": [
+    { "status": "Completed", "count": 5518 },
+    { "status": "Pending", "count": 324 },
+    { "status": "In Progress", "count": 156 },
+    { "status": "Cancelled", "count": 45 }
+  ],
+  "dailyTests": [
+    { "date": "2024-06-01", "count": 98 },
+    { "date": "2024-06-02", "count": 105 },
+    { "date": "2024-06-03", "count": 92 },
+    { "date": "2024-06-04", "count": 102 },
+    { "date": "2024-06-05", "count": 110 },
+    { "date": "2024-06-06", "count": 95 }
+  ]
+}

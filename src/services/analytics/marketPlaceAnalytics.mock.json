@@ -1,0 +1,34 @@
+{
+  "totalProducts": 145,
+  "listedProducts": 132,
+  "totalOrders": 856,
+  "completedOrders": 782,
+  "totalRevenue": 45200000,
+  "averageOrderValue": 52800,
+  "topSellingProducts": [
+    { "product": "Medical Equipment Set A", "sales": 285, "revenue": 14250000 },
+    { "product": "Surgical Supplies Kit", "sales": 198, "revenue": 9900000 },
+    { "product": "Diagnostic Tools", "sales": 142, "revenue": 7100000 },
+    { "product": "PPE Bundle", "sales": 126, "revenue": 6300000 },
+    { "product": "Laboratory Reagents", "sales": 105, "revenue": 5250000 }
+  ],
+  "ordersByStatus": [
+    { "status": "Completed", "count": 782 },
+    { "status": "Processing", "count": 52 },
+    { "status": "Pending", "count": 22 }
+  ],
+  "salesTrend": [
+    { "month": "Jan", "orders": 120, "revenue": 6500000 },
+    { "month": "Feb", "orders": 135, "revenue": 7200000 },
+    { "month": "Mar", "orders": 148, "revenue": 7800000 },
+    { "month": "Apr", "orders": 142, "revenue": 7500000 },
+    { "month": "May", "orders": 156, "revenue": 8300000 },
+    { "month": "Jun", "orders": 155, "revenue": 7900000 }
+  ],
+  "vendorPerformance": [
+    { "vendor": "MedSupply Pro", "rating": 4.8, "orders": 285 },
+    { "vendor": "HealthEquip Ltd", "rating": 4.6, "orders": 198 },
+    { "vendor": "MediStore", "rating": 4.5, "orders": 156 },
+    { "vendor": "CarePlus Supplies", "rating": 4.3, "orders": 128 }
+  ]
+}

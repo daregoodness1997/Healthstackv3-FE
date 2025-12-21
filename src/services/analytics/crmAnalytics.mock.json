@@ -1,0 +1,38 @@
+{
+  "totalContacts": 3842,
+  "activeLeads": 1256,
+  "convertedLeads": 842,
+  "conversionRate": 67.0,
+  "leadsBySource": [
+    { "source": "Website", "count": 1245 },
+    { "source": "Referral", "count": 856 },
+    { "source": "Social Media", "count": 642 },
+    { "source": "Email Campaign", "count": 524 },
+    { "source": "Cold Call", "count": 356 },
+    { "source": "Walk-in", "count": 219 }
+  ],
+  "leadsByStatus": [
+    { "status": "New", "count": 456 },
+    { "status": "Contacted", "count": 724 },
+    { "status": "Qualified", "count": 589 },
+    { "status": "Negotiating", "count": 342 },
+    { "status": "Converted", "count": 842 },
+    { "status": "Lost", "count": 889 }
+  ],
+  "revenueBySource": [
+    { "source": "Website", "revenue": 245000 },
+    { "source": "Referral", "revenue": 189000 },
+    { "source": "Social Media", "revenue": 156000 },
+    { "source": "Email Campaign", "revenue": 128000 },
+    { "source": "Cold Call", "revenue": 98000 },
+    { "source": "Walk-in", "revenue": 67000 }
+  ],
+  "monthlyTrend": [
+    { "month": "Jan", "contacts": 324, "converted": 68 },
+    { "month": "Feb", "contacts": 298, "converted": 72 },
+    { "month": "Mar", "contacts": 356, "converted": 85 },
+    { "month": "Apr", "contacts": 387, "converted": 91 },
+    { "month": "May", "contacts": 412, "converted": 98 },
+    { "month": "Jun", "contacts": 389, "converted": 87 }
+  ]
+}

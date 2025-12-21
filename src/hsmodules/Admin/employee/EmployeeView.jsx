@@ -1,0 +1,442 @@
+import React, {useContext, useState, useEffect} from "react";
+import {useForm} from "react-hook-form";
+import {toast} from "react-toastify";
+import GlobalCustomButton from "../../../components/buttons/CustomButton";
+import Input from "../../../components/inputs/basic/Input";
+import {UserContext, ObjectContext} from "../../../context";
+import SecurityUpdateIcon from "@mui/icons-material/SecurityUpdate";
+import BadgeIcon from "@mui/icons-material/Badge";
+import client from "../../../feathers";
+import {
+  GrayWrapper,
+  PageWrapper,
+  GridBox,
+} from "../../app/styles";
+import {Box} from "@mui/system";
+import CreateIcon from "@mui/icons-material/Create";
+import DeleteIcon from "@mui/icons-material/Delete";
+import ModalBox from "../../../components/modal";
+import CustomConfirmationDialog from "../../../components/confirm-dialog/confirm-dialog";
+import ModuleList from "../ModuleList";
+import EmployeeLocation from "./EmployeeLocation";
+import {Avatar, IconButton} from "@mui/material";
+import DriveFileRenameOutlineIcon from "@mui/icons-material/DriveFileRenameOutline";
+import PasswordInput from "../../../components/inputs/basic/Password";
+import PasswordIcon from "@mui/icons-material/Password";
+
+
+const EmployeeView = ({closeModal, employee}) => {
+  const {register, handleSubmit, setValue, reset, errors} = useForm(); 
+  const [editing, setEditing] = useState(false);
+  const EmployeeServ = client.service("employee");
+  const [confirmDialog, setConfirmDialog] = useState(false);
+  const {setState, showActionLoader, hideActionLoader} =
+    useContext(ObjectContext);
+  const [updatingEmployee, setUpatingEmployee] = useState(false);
+  const [showRoles, setShowRoles] = useState(false);
+  const [locationModal, setLocationModal] = useState(false);
+  const [passwordModal, setPasswordModal] = useState(false);
+
+ 
+  useEffect(() => {
+    setValue("firstname", employee.firstname, {
+      shouldValidate: true,
+      shouldDirty: true,
+    });
+    setValue("lastname", employee.lastname, {
+      shouldValidate: true,
+      shouldDirty: true,
+    });
+    setValue("position", employee?.position, {
+      shouldValidate: true,
+      shouldDirty: true,
+    });
+    setValue("profession", employee.profession, {
+      shouldValidate: true,
+      shouldDirty: true,
+    });
+    setValue("phone", employee.phone, {
+      shouldValidate: true,
+      shouldDirty: true,
+    });
+    setValue("email", employee.email, {
+      shouldValidate: true,
+      shouldDirty: true,
+    });
+    setValue("department", employee.department, {
+      shouldValidate: true,
+      shouldDirty: true,
+    });
+    setValue("deptunit", employee.deptunit, {
+      shouldValidate: true,
+      shouldDirty: true,
+    });
+    return () => {};
+  }, []);
+
+
+  const changeState = employee => {
+    const newEmployeeModule = {
+      selectedEmployee: employee,
+      show: "create",
+    };
+    setState(prevstate => ({...prevstate, EmployeeModule: newEmployeeModule}));
+  };
+
+  const handleDelete = async () => {
+    showActionLoader();
+    const dleteId = employee._id;
+    EmployeeServ.remove(dleteId)
+      .then(res => {
+        hideActionLoader();
+        reset();
+        setConfirmDialog(false);
+        toast.success("Employee deleted succesfully");
+        changeState({});
+      })
+      .catch(err => {
+        hideActionLoader();
+        setConfirmDialog(false);
+        toast.error(
+          "Error deleting Employee, probable network issues or " + err
+        );
+      });
+  };
+
+  const onSubmit = (data, e) => {
+    e.preventDefault();
+    setUpatingEmployee(true);
+    data.facility = employee.facility;
+    EmployeeServ.patch(employee._id, data)
+      .then(res => {
+        setUpatingEmployee(false);
+        toast.success("Employee Data succesfully updated");
+        changeState(res);
+        closeModal();
+      })
+      .catch(err => {
+        setUpatingEmployee(false);
+        toast.error(
+          "Error updating Employee, probable network issues or " + err
+        );
+      });
+  };
+
+  return (
+    <PageWrapper>
+      <CustomConfirmationDialog
+        open={confirmDialog}
+        cancelAction={() => setConfirmDialog(false)}
+        confirmationAction={handleDelete}
+        
+        type="danger"
+        message={`Are you sure you want to delete this employee ${employee.firstname} ${employee.lastname}?`}
+      />
+      <ModalBox
+        open={passwordModal}
+        onClose={() => setPasswordModal(false)}
+        header={`Change Password  for ${employee.firstname} ${employee.lastname}`}
+      >
+        <ChangeEmployeePassword2
+          closeModal={() => setPasswordModal(false)}
+          employee={employee}
+        />
+      </ModalBox>
+
+      <ModalBox
+        open={showRoles}
+        onClose={() => setShowRoles(false)}
+        header={`Roles for ${employee.firstname} ${employee.lastname}`}
+      >
+        <ModuleList handlecloseModal={() => setShowRoles(false)} />
+      </ModalBox>
+
+      <ModalBox
+        open={locationModal}
+        onClose={() => setLocationModal(false)}
+        header={`Locations for ${employee.firstname} ${employee.lastname}`}
+      >
+        <EmployeeLocation handlecloseModal={() => setLocationModal(false)} />
+      </ModalBox>
+
+      <GrayWrapper>
+        
+        <Box>
+          <h6 style={{fontSize: "14px"}}>Employee Detail</h6>
+        </Box>
+        <Box
+          display="flex"
+          justifyContent="space-between"
+          alignItems="center"
+          mt={1}
+        >
+          <IconButton>
+            <Avatar
+              sx={{width: 80, height: 80}}
+              src={employee?.imageurl}
+              //src={facility?.facilitylogo}
+            />
+          </IconButton>
+
+          <Box sx={{display: "flex"}} gap={1}>
+            {!editing ? (
+              <>
+                <GlobalCustomButton
+                  disabled={editing}
+                  onClick={() => {
+                    setEditing(!editing);
+                  }}
+                >
+                  <CreateIcon fontSize="small" sx={{marginRight: "5px"}} />
+                  Edit Employee
+                </GlobalCustomButton>
+                <GlobalCustomButton
+                  color="secondary"
+                  onClick={() => setShowRoles(true)}
+                >
+                  <BadgeIcon fontSize="small" sx={{marginRight: "5px"}} />
+                  Set Employee Roles
+                </GlobalCustomButton>
+
+                <GlobalCustomButton
+                  color="secondary"
+                  onClick={() => setLocationModal(true)}
+                >
+                  <BadgeIcon fontSize="small" sx={{marginRight: "5px"}} />
+                  Set Employee Locations
+                </GlobalCustomButton>
+                <GlobalCustomButton
+                  onClick={() => setPasswordModal(true)}
+                  color="info"
+                >
+                  <DriveFileRenameOutlineIcon fontSize="small" />
+                  Change Password
+                </GlobalCustomButton>
+              </>
+            ) : (
+              <>
+                <GlobalCustomButton
+                  color="warning"
+                  onClick={() => setEditing(false)}
+                >
+                  Cancel Update
+                </GlobalCustomButton>
+
+                <GlobalCustomButton
+                  onClick={handleSubmit(onSubmit)}
+                  color="success"
+                  type="submit"
+                  loading={updatingEmployee}
+                >
+                  <SecurityUpdateIcon
+                    fontSize="small"
+                    sx={{marginRight: "5px"}}
+                  />
+                  Update Employee Detail
+                </GlobalCustomButton>
+
+                <GlobalCustomButton
+                  onClick={() => setConfirmDialog(true)}
+                  color="error"
+                >
+                  <DeleteIcon fontSize="small" sx={{marginRight: "5px"}} />
+                  Delete Employee
+                </GlobalCustomButton>
+              </>
+            )}
+          </Box>
+        </Box>
+        <form>
+          
+          <GridBox>
+            {!editing ? (
+              <Input
+                label="First Name"
+                defaultValue={employee?.firstname}
+                disabled={!editing}
+              />
+            ) : (
+              <Input
+                label="First Name"
+                register={register("firstname")}
+                errorText={errors?.firstname?.message}
+              />
+            )}
+
+            {!editing ? (
+              <Input
+                label="Last Name"
+                defaultValue={employee?.lastname}
+                disabled={!editing}
+              />
+            ) : (
+              <Input
+                label="Last Name"
+                register={register("lastname")}
+                errorText={errors?.lastname?.message}
+              />
+            )}
+
+            {!editing ? (
+              <Input
+                label="Position"
+                register={register("position")}
+                disabled={!editing}
+              />
+            ) : (
+              <Input
+                label="Position"
+                register={register("position")}
+                errorText={errors?.middlename?.message}
+              />
+            )}
+          </GridBox>
+          <GridBox>
+            {!editing ? (
+              <Input
+                label="Profession"
+                defaultValue={employee?.profession}
+                disabled={!editing}
+              />
+            ) : (
+              <Input
+                label="Profession"
+                register={register("profession")}
+                errorText={errors?.profession?.message}
+              />
+            )}
+            {!editing ? (
+              <Input
+                label="Phone Number"
+                defaultValue={employee?.phone}
+                disabled={!editing}
+              />
+            ) : (
+              <Input
+                label="Phone Number"
+                register={register("phone")}
+                errorText={errors?.phone?.message}
+              />
+            )}
+            {!editing ? (
+              <Input
+                label="Email"
+                defaultValue={employee?.email}
+                disabled={!editing}
+              />
+            ) : (
+              <Input
+                label="Email"
+                register={register("email")}
+                type="email"
+                errorText={errors?.email?.message}
+              />
+            )}
+          </GridBox>
+          <GridBox>
+            {!editing ? (
+              <Input
+                label="Department"
+                defaultValue={employee?.department}
+                disabled={!editing}
+              />
+            ) : (
+              <Input
+                label="Department"
+                register={register("department")}
+                errorText={errors?.department?.message}
+              />
+            )}
+            {!editing ? (
+              <Input
+                label="Department Unit"
+                defaultValue={employee?.deptunit}
+                disabled={!editing}
+              />
+            ) : (
+              <Input
+                label="Department Unit"
+                register={register("deptunit")}
+                errorText={errors?.deptunit?.message}
+              />
+            )}
+          </GridBox>
+        </form>
+      </GrayWrapper>
+    </PageWrapper>
+  );
+};
+
+export default EmployeeView;
+
+export const ChangeEmployeePassword2 = ({closeModal, employee}) => {
+  const userServ = client.service("users");
+  const {user} = useContext(UserContext);
+  const { showActionLoader, hideActionLoader} =
+    useContext(ObjectContext);
+  const {register, handleSubmit} = useForm();
+
+  const handleChangePassword = async data => {
+    showActionLoader();
+    const token = localStorage.getItem("feathers-jwt");
+
+    const postObject = {
+      action: "passwordChange",
+      value: {
+        user: {
+          email: user.currentEmployee.email,
+        },
+        oldPassword: data.old_password,
+        password: data.new_password,
+      },
+    };
+    userServ
+      .patch(employee.userId, {password: data.new_password})
+      .then(() => {
+        hideActionLoader();
+        closeModal();
+        toast.success("You have successfully updated your account password");
+      })
+      .catch(err => {
+        hideActionLoader();
+        toast.error(`There was an error updating your account ${err}`);
+      });
+  };
+
+  return (
+    <Box
+      sx={{
+        width: "500px",
+      }}
+    >
+      <form>
+        <Box
+          sx={{
+            width: "100%",
+            display: "flex",
+            flexDirection: "column",
+            gap: 2,
+          }}
+        >
+          <PasswordInput
+            important
+            label="New Password"
+            register={register("new_password", {
+              required: "Please provide your employee's new password",
+            })}
+          />
+        </Box>
+      </form>
+
+      <Box mt={2}>
+        <GlobalCustomButton
+          color="success"
+          onClick={handleSubmit(handleChangePassword)}
+        >
+          <PasswordIcon fontSize="small" sx={{marginRight: "5px"}} /> Update
+          Password
+        </GlobalCustomButton>
+      </Box>
+    </Box>
+  );
+};
