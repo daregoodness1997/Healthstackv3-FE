@@ -151,7 +151,7 @@ const OrganizationSignup = () => {
     await FacilityServ.create(facilityDocument)
       .then(async (res) => {
         console.log('Facility created:', res);
-        
+
         // Now create the employee with the facility ID
         const employeeData = {
           ...data,
