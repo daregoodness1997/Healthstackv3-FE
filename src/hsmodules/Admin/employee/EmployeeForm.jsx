@@ -103,7 +103,7 @@ export const EmployeeForm = ({ open, setOpen }) => {
 
   const submit = async (data) => {
     showActionLoader();
-    
+
     const employeeData = {
       ...data,
       createdby: user._id,
@@ -216,10 +216,7 @@ export const EmployeeForm = ({ open, setOpen }) => {
         </GridBox>
 
         <Box display="flex" justifyContent="flex-end">
-          <GlobalCustomButton
-            type="submit"
-            loading={createEmployee.isPending}
-          >
+          <GlobalCustomButton type="submit" loading={createEmployee.isPending}>
             <ControlPointIcon fontSize="small" sx={{ marginRight: '5px' }} />
             Create New Employee
           </GlobalCustomButton>

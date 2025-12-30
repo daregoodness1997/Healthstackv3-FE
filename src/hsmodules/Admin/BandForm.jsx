@@ -82,10 +82,7 @@ export const BandForm = ({ open, setOpen }) => {
       </Grid>
 
       <Box display="flex" justifyContent="flex-end" mb="1rem">
-        <GlobalCustomButton
-          type="submit"
-          style={{ marginTop: '1rem' }}
-        >
+        <GlobalCustomButton type="submit" style={{ marginTop: '1rem' }}>
           <CreateIcon fontSize="small" sx={{ marginRight: '5px' }} />
           Create Band
         </GlobalCustomButton>

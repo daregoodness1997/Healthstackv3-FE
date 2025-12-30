@@ -1,89 +1,88 @@
-import React, {useContext, useState, useEffect} from "react";
-import {useForm} from "react-hook-form";
-import {toast} from "react-toastify";
-import GlobalCustomButton from "../../../components/buttons/CustomButton";
-import Input from "../../../components/inputs/basic/Input";
-import {UserContext, ObjectContext} from "../../../context";
-import SecurityUpdateIcon from "@mui/icons-material/SecurityUpdate";
-import BadgeIcon from "@mui/icons-material/Badge";
-import client from "../../../feathers";
+import React, { useContext, useState, useEffect } from 'react';
+import { useForm } from 'react-hook-form';
+import { toast } from 'react-toastify';
+import GlobalCustomButton from '../../../components/buttons/CustomButton';
+import Input from '../../../components/inputs/basic/Input';
+import { UserContext, ObjectContext } from '../../../context';
+import SecurityUpdateIcon from '@mui/icons-material/SecurityUpdate';
+import BadgeIcon from '@mui/icons-material/Badge';
+import client from '../../../feathers';
+import { GrayWrapper, PageWrapper, GridBox } from '../../app/styles';
+import { Box } from '@mui/system';
+import CreateIcon from '@mui/icons-material/Create';
+import DeleteIcon from '@mui/icons-material/Delete';
+import ModalBox from '../../../components/modal';
+import CustomConfirmationDialog from '../../../components/confirm-dialog/confirm-dialog';
+import ModuleList from '../ModuleList';
+import EmployeeLocation from './EmployeeLocation';
+import { Avatar, IconButton } from '@mui/material';
+import DriveFileRenameOutlineIcon from '@mui/icons-material/DriveFileRenameOutline';
+import PasswordInput from '../../../components/inputs/basic/Password';
+import PasswordIcon from '@mui/icons-material/Password';
 import {
-  GrayWrapper,
-  PageWrapper,
-  GridBox,
-} from "../../app/styles";
-import {Box} from "@mui/system";
-import CreateIcon from "@mui/icons-material/Create";
-import DeleteIcon from "@mui/icons-material/Delete";
-import ModalBox from "../../../components/modal";
-import CustomConfirmationDialog from "../../../components/confirm-dialog/confirm-dialog";
-import ModuleList from "../ModuleList";
-import EmployeeLocation from "./EmployeeLocation";
-import {Avatar, IconButton} from "@mui/material";
-import DriveFileRenameOutlineIcon from "@mui/icons-material/DriveFileRenameOutline";
-import PasswordInput from "../../../components/inputs/basic/Password";
-import PasswordIcon from "@mui/icons-material/Password";
-import { useUpdateEmployee, useDeleteEmployee } from "../../../hooks/queries/useEmployees";
+  useUpdateEmployee,
+  useDeleteEmployee,
+} from '../../../hooks/queries/useEmployees';
 
-
-const EmployeeView = ({closeModal, employee}) => {
-  const {register, handleSubmit, setValue, reset, errors} = useForm(); 
+const EmployeeView = ({ closeModal, employee }) => {
+  const { register, handleSubmit, setValue, reset, errors } = useForm();
   const updateEmployee = useUpdateEmployee();
   const deleteEmployee = useDeleteEmployee();
   const [editing, setEditing] = useState(false);
-  const EmployeeServ = client.service("employee");
+  const EmployeeServ = client.service('employee');
   const [confirmDialog, setConfirmDialog] = useState(false);
-  const {setState, showActionLoader, hideActionLoader} =
+  const { setState, showActionLoader, hideActionLoader } =
     useContext(ObjectContext);
   const [updatingEmployee, setUpatingEmployee] = useState(false);
   const [showRoles, setShowRoles] = useState(false);
   const [locationModal, setLocationModal] = useState(false);
   const [passwordModal, setPasswordModal] = useState(false);
 
- 
   useEffect(() => {
-    setValue("firstname", employee.firstname, {
+    setValue('firstname', employee.firstname, {
       shouldValidate: true,
       shouldDirty: true,
     });
-    setValue("lastname", employee.lastname, {
+    setValue('lastname', employee.lastname, {
       shouldValidate: true,
       shouldDirty: true,
     });
-    setValue("position", employee?.position, {
+    setValue('position', employee?.position, {
       shouldValidate: true,
       shouldDirty: true,
     });
-    setValue("profession", employee.profession, {
+    setValue('profession', employee.profession, {
       shouldValidate: true,
       shouldDirty: true,
     });
-    setValue("phone", employee.phone, {
+    setValue('phone', employee.phone, {
       shouldValidate: true,
       shouldDirty: true,
     });
-    setValue("email", employee.email, {
+    setValue('email', employee.email, {
       shouldValidate: true,
       shouldDirty: true,
     });
-    setValue("department", employee.department, {
+    setValue('department', employee.department, {
       shouldValidate: true,
       shouldDirty: true,
     });
-    setValue("deptunit", employee.deptunit, {
+    setValue('deptunit', employee.deptunit, {
       shouldValidate: true,
       shouldDirty: true,
     });
     return () => {};
   }, []);
 
-
-  const changeState = employee => {
+  const changeState = (employee) => {
     const newEmployeeModule = {
       selectedEmployee: employee,
-      show: "create",
+      show: 'create',
     };
-    setState(prevstate => ({...prevstate, EmployeeModule: newEmployeeModule}));
+    setState((prevstate) => ({
+      ...prevstate,
+      EmployeeModule: newEmployeeModule,
+    }));
   };
 
   const handleDelete = async () => {
@@ -97,7 +96,7 @@ const EmployeeView = ({closeModal, employee}) => {
     } catch (err) {
       hideActionLoader();
       setConfirmDialog(false);
-      toast.error("Error deleting Employee, probable network issues or " + err);
+      toast.error('Error deleting Employee, probable network issues or ' + err);
     }
   };
 
@@ -114,7 +113,7 @@ const EmployeeView = ({closeModal, employee}) => {
       closeModal();
     } catch (err) {
       setUpatingEmployee(false);
-      toast.error("Error updating Employee, probable network issues or " + err);
+      toast.error('Error updating Employee, probable network issues or ' + err);
     }
   };
 
@@ -124,7 +123,6 @@ const EmployeeView = ({closeModal, employee}) => {
         open={confirmDialog}
         cancelAction={() => setConfirmDialog(false)}
         confirmationAction={handleDelete}
-        
         type="danger"
         message={`Are you sure you want to delete this employee ${employee.firstname} ${employee.lastname}?`}
       />
@@ -156,9 +154,8 @@ const EmployeeView = ({closeModal, employee}) => {
       </ModalBox>
 
       <GrayWrapper>
-        
         <Box>
-          <h6 style={{fontSize: "14px"}}>Employee Detail</h6>
+          <h6 style={{ fontSize: '14px' }}>Employee Detail</h6>
         </Box>
         <Box
           display="flex"
@@ -168,13 +165,13 @@ const EmployeeView = ({closeModal, employee}) => {
         >
           <IconButton>
             <Avatar
-              sx={{width: 80, height: 80}}
+              sx={{ width: 80, height: 80 }}
               src={employee?.imageurl}
               //src={facility?.facilitylogo}
             />
           </IconButton>
 
-          <Box sx={{display: "flex"}} gap={1}>
+          <Box sx={{ display: 'flex' }} gap={1}>
             {!editing ? (
               <>
                 <GlobalCustomButton
@@ -183,14 +180,14 @@ const EmployeeView = ({closeModal, employee}) => {
                     setEditing(!editing);
                   }}
                 >
-                  <CreateIcon fontSize="small" sx={{marginRight: "5px"}} />
+                  <CreateIcon fontSize="small" sx={{ marginRight: '5px' }} />
                   Edit Employee
                 </GlobalCustomButton>
                 <GlobalCustomButton
                   color="secondary"
                   onClick={() => setShowRoles(true)}
                 >
-                  <BadgeIcon fontSize="small" sx={{marginRight: "5px"}} />
+                  <BadgeIcon fontSize="small" sx={{ marginRight: '5px' }} />
                   Set Employee Roles
                 </GlobalCustomButton>
 
@@ -198,7 +195,7 @@ const EmployeeView = ({closeModal, employee}) => {
                   color="secondary"
                   onClick={() => setLocationModal(true)}
                 >
-                  <BadgeIcon fontSize="small" sx={{marginRight: "5px"}} />
+                  <BadgeIcon fontSize="small" sx={{ marginRight: '5px' }} />
                   Set Employee Locations
                 </GlobalCustomButton>
                 <GlobalCustomButton
@@ -226,7 +223,7 @@ const EmployeeView = ({closeModal, employee}) => {
                 >
                   <SecurityUpdateIcon
                     fontSize="small"
-                    sx={{marginRight: "5px"}}
+                    sx={{ marginRight: '5px' }}
                   />
                   Update Employee Detail
                 </GlobalCustomButton>
@@ -235,7 +232,7 @@ const EmployeeView = ({closeModal, employee}) => {
                   onClick={() => setConfirmDialog(true)}
                   color="error"
                 >
-                  <DeleteIcon fontSize="small" sx={{marginRight: "5px"}} />
+                  <DeleteIcon fontSize="small" sx={{ marginRight: '5px' }} />
                   Delete Employee
                 </GlobalCustomButton>
               </>
@@ -243,7 +240,6 @@ const EmployeeView = ({closeModal, employee}) => {
           </Box>
         </Box>
         <form>
-          
           <GridBox>
             {!editing ? (
               <Input
@@ -254,7 +250,7 @@ const EmployeeView = ({closeModal, employee}) => {
             ) : (
               <Input
                 label="First Name"
-                register={register("firstname")}
+                register={register('firstname')}
                 errorText={errors?.firstname?.message}
               />
             )}
@@ -268,7 +264,7 @@ const EmployeeView = ({closeModal, employee}) => {
             ) : (
               <Input
                 label="Last Name"
-                register={register("lastname")}
+                register={register('lastname')}
                 errorText={errors?.lastname?.message}
               />
             )}
@@ -276,13 +272,13 @@ const EmployeeView = ({closeModal, employee}) => {
             {!editing ? (
               <Input
                 label="Position"
-                register={register("position")}
+                register={register('position')}
                 disabled={!editing}
               />
             ) : (
               <Input
                 label="Position"
-                register={register("position")}
+                register={register('position')}
                 errorText={errors?.middlename?.message}
               />
             )}
@@ -297,7 +293,7 @@ const EmployeeView = ({closeModal, employee}) => {
             ) : (
               <Input
                 label="Profession"
-                register={register("profession")}
+                register={register('profession')}
                 errorText={errors?.profession?.message}
               />
             )}
@@ -310,7 +306,7 @@ const EmployeeView = ({closeModal, employee}) => {
             ) : (
               <Input
                 label="Phone Number"
-                register={register("phone")}
+                register={register('phone')}
                 errorText={errors?.phone?.message}
               />
             )}
@@ -323,7 +319,7 @@ const EmployeeView = ({closeModal, employee}) => {
             ) : (
               <Input
                 label="Email"
-                register={register("email")}
+                register={register('email')}
                 type="email"
                 errorText={errors?.email?.message}
               />
@@ -339,7 +335,7 @@ const EmployeeView = ({closeModal, employee}) => {
             ) : (
               <Input
                 label="Department"
-                register={register("department")}
+                register={register('department')}
                 errorText={errors?.department?.message}
               />
             )}
@@ -352,7 +348,7 @@ const EmployeeView = ({closeModal, employee}) => {
             ) : (
               <Input
                 label="Department Unit"
-                register={register("deptunit")}
+                register={register('deptunit')}
                 errorText={errors?.deptunit?.message}
               />
             )}
@@ -365,19 +361,18 @@ const EmployeeView = ({closeModal, employee}) => {
 
 export default EmployeeView;
 
-export const ChangeEmployeePassword2 = ({closeModal, employee}) => {
-  const userServ = client.service("users");
-  const {user} = useContext(UserContext);
-  const { showActionLoader, hideActionLoader} =
-    useContext(ObjectContext);
-  const {register, handleSubmit} = useForm();
+export const ChangeEmployeePassword2 = ({ closeModal, employee }) => {
+  const userServ = client.service('users');
+  const { user } = useContext(UserContext);
+  const { showActionLoader, hideActionLoader } = useContext(ObjectContext);
+  const { register, handleSubmit } = useForm();
 
-  const handleChangePassword = async data => {
+  const handleChangePassword = async (data) => {
     showActionLoader();
-    const token = localStorage.getItem("feathers-jwt");
+    const token = localStorage.getItem('feathers-jwt');
 
     const postObject = {
-      action: "passwordChange",
+      action: 'passwordChange',
       value: {
         user: {
           email: user.currentEmployee.email,
@@ -387,13 +382,13 @@ export const ChangeEmployeePassword2 = ({closeModal, employee}) => {
       },
     };
     userServ
-      .patch(employee.userId, {password: data.new_password})
+      .patch(employee.userId, { password: data.new_password })
       .then(() => {
         hideActionLoader();
         closeModal();
-        toast.success("You have successfully updated your account password");
+        toast.success('You have successfully updated your account password');
       })
-      .catch(err => {
+      .catch((err) => {
         hideActionLoader();
         toast.error(`There was an error updating your account ${err}`);
       });
@@ -402,22 +397,22 @@ export const ChangeEmployeePassword2 = ({closeModal, employee}) => {
   return (
     <Box
       sx={{
-        width: "500px",
+        width: '500px',
       }}
     >
       <form>
         <Box
           sx={{
-            width: "100%",
-            display: "flex",
-            flexDirection: "column",
+            width: '100%',
+            display: 'flex',
+            flexDirection: 'column',
             gap: 2,
           }}
         >
           <PasswordInput
             important
             label="New Password"
-            register={register("new_password", {
+            register={register('new_password', {
               required: "Please provide your employee's new password",
             })}
           />
@@ -429,7 +424,7 @@ export const ChangeEmployeePassword2 = ({closeModal, employee}) => {
           color="success"
           onClick={handleSubmit(handleChangePassword)}
         >
-          <PasswordIcon fontSize="small" sx={{marginRight: "5px"}} /> Update
+          <PasswordIcon fontSize="small" sx={{ marginRight: '5px' }} /> Update
           Password
         </GlobalCustomButton>
       </Box>

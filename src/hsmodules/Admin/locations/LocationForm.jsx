@@ -1,17 +1,20 @@
-import React, { useContext } from "react";
-import { useForm } from "react-hook-form";
-import { toast } from "react-toastify";
-import GlobalCustomButton from "../../../components/buttons/CustomButton";
-import Input from "../../../components/inputs/basic/Input";
-import CustomSelect from "../../../components/inputs/basic/Select";
-import { UserContext } from "../../../context";
-import { yupResolver } from "@hookform/resolvers/yup";
-import { locationTypeOptions } from "../../../dummy-data";
-import ControlPointIcon from "@mui/icons-material/ControlPoint";
-import { BottomWrapper } from "../../app/styles";
-import { createLocationSchema } from "../schema";
-import ModalBox from "../../../components/modal";
-import { useCreateLocation, useLocations } from "../../../hooks/queries/useLocations";
+import React, { useContext } from 'react';
+import { useForm } from 'react-hook-form';
+import { toast } from 'react-toastify';
+import GlobalCustomButton from '../../../components/buttons/CustomButton';
+import Input from '../../../components/inputs/basic/Input';
+import CustomSelect from '../../../components/inputs/basic/Select';
+import { UserContext } from '../../../context';
+import { yupResolver } from '@hookform/resolvers/yup';
+import { locationTypeOptions } from '../../../dummy-data';
+import ControlPointIcon from '@mui/icons-material/ControlPoint';
+import { BottomWrapper } from '../../app/styles';
+import { createLocationSchema } from '../schema';
+import ModalBox from '../../../components/modal';
+import {
+  useCreateLocation,
+  useLocations,
+} from '../../../hooks/queries/useLocations';
 
 export const LocationForm = ({ open, setOpen }) => {
   const { user } = useContext(UserContext);
@@ -48,13 +51,13 @@ export const LocationForm = ({ open, setOpen }) => {
   return (
     <ModalBox open={open} onClose={setOpen} header="Create Location">
       <form onSubmit={handleSubmit(submit)}>
-        <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
           <Input
             label="Name of Location"
             control={control}
             name="name"
             errorText={errors?.name?.message}
-            sx={{ marginBottom: "2rem" }}
+            sx={{ marginBottom: '2rem' }}
           />
           <CustomSelect
             label="Choose Location Type"
@@ -62,7 +65,7 @@ export const LocationForm = ({ open, setOpen }) => {
             options={locationTypeOptions}
             control={control}
             errorText={errors?.locationType?.message}
-            sx={{ marginBottom: "2rem" }}
+            sx={{ marginBottom: '2rem' }}
           />
           <CustomSelect
             label="Choose Branch"
@@ -70,12 +73,12 @@ export const LocationForm = ({ open, setOpen }) => {
             options={branchData?.data || []}
             control={control}
             errorText={errors?.branch?.message}
-            sx={{ marginBottom: "2rem" }}
+            sx={{ marginBottom: '2rem' }}
           />
         </div>
         <BottomWrapper>
           <GlobalCustomButton type="submit" loading={createLocation.isPending}>
-            <ControlPointIcon fontSize="small" sx={{ marginRight: "5px" }} />
+            <ControlPointIcon fontSize="small" sx={{ marginRight: '5px' }} />
             Create Location
           </GlobalCustomButton>
         </BottomWrapper>

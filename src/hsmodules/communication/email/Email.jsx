@@ -1,16 +1,16 @@
-import {useState, useEffect, useCallback, useContext} from "react";
-import {Box, Typography} from "@mui/material";
-import {Drawer} from "antd";
-import EmailIcon from "@mui/icons-material/Email";
-import client from "../../../feathers";
+import { useState, useEffect, useCallback, useContext } from 'react';
+import { Box, Typography } from '@mui/material';
+import { Drawer } from 'antd';
+import EmailIcon from '@mui/icons-material/Email';
+import client from '../../../feathers';
 
-import {ObjectContext, UserContext} from "../../../context";
-import CustomTable from "../../../components/customtable";
-import dayjs from "dayjs";
-import {TableMenu} from "../../../ui/styled/global";
-import FilterMenu from "../../../components/utilities/FilterMenu";
-import GlobalCustomButton from "../../../components/buttons/CustomButton";
-import CommunicationEmailCreate from "./CreateEmail";
+import { ObjectContext, UserContext } from '../../../context';
+import CustomTable from '../../../components/customtable';
+import dayjs from 'dayjs';
+import { TableMenu } from '../../../ui/styled/global';
+import FilterMenu from '../../../components/utilities/FilterMenu';
+import GlobalCustomButton from '../../../components/buttons/CustomButton';
+import CommunicationEmailCreate from './CreateEmail';
 
 const CommunicationEmail = () => {
   const [createModal, setCreateModal] = useState(false);
@@ -20,7 +20,7 @@ const CommunicationEmail = () => {
         title="Send Email"
         open={createModal}
         onClose={() => setCreateModal(false)}
-        width={"60%"}
+        width={'60%'}
         placement="right"
       >
         <CommunicationEmailCreate closeModal={() => setCreateModal(false)} />
@@ -34,10 +34,10 @@ const CommunicationEmail = () => {
 
 export default CommunicationEmail;
 
-export const CommunicationEmailList = ({showCreate}) => {
-  const emailServer = client.service("email");
-  const {state, setState} = useContext(ObjectContext);
-  const {user} = useContext(UserContext);
+export const CommunicationEmailList = ({ showCreate }) => {
+  const emailServer = client.service('email');
+  const { state, setState } = useContext(ObjectContext);
+  const { user } = useContext(UserContext);
   const [emails, setEmails] = useState([]);
   const [loading, setLoading] = useState(false);
 
@@ -61,31 +61,31 @@ export const CommunicationEmailList = ({showCreate}) => {
     getEmails();
   }, [getEmails]);
 
-  const handleSearch = val => {};
+  const handleSearch = (val) => {};
 
   const handleCreateNew = () => {
     showCreate();
   };
 
-  const returnStatus = status => {
+  const returnStatus = (status) => {
     switch (status?.toLowerCase()) {
-      case "sent":
+      case 'sent':
         return (
-          <span style={{color: "#17935C", textTransform: "capitalize"}}>
+          <span style={{ color: '#17935C', textTransform: 'capitalize' }}>
             {status}
           </span>
         );
 
-      case "pending":
+      case 'pending':
         return (
-          <span style={{color: "orange", textTransform: "capitalize"}}>
+          <span style={{ color: 'orange', textTransform: 'capitalize' }}>
             {status}
           </span>
         );
 
-      case "failed":
+      case 'failed':
         return (
-          <span style={{color: "red", textTransform: "capitalize"}}>
+          <span style={{ color: 'red', textTransform: 'capitalize' }}>
             {status}
           </span>
         );
@@ -97,22 +97,22 @@ export const CommunicationEmailList = ({showCreate}) => {
 
   const emailColumns = [
     {
-      name: "S/N",
-      key: "sn",
-      description: "SN",
+      name: 'S/N',
+      key: 'sn',
+      description: 'SN',
       selector: (row, i) => i + 1,
       sortable: true,
-      inputType: "HIDDEN",
-      width: "50px",
+      inputType: 'HIDDEN',
+      width: '50px',
     },
 
     {
-      name: "Sent By",
-      key: "sn",
-      description: "Enter name of Company",
-      selector: row => (
+      name: 'Sent By',
+      key: 'sn',
+      description: 'Enter name of Company',
+      selector: (row) => (
         <Typography
-          sx={{fontSize: "0.8rem", whiteSpace: "normal"}}
+          sx={{ fontSize: '0.8rem', whiteSpace: 'normal' }}
           data-tag="allowRowEvents"
         >
           John Doe
@@ -120,19 +120,19 @@ export const CommunicationEmailList = ({showCreate}) => {
       ),
       sortable: true,
       required: true,
-      inputType: "HIDDEN",
+      inputType: 'HIDDEN',
       style: {
-        color: "#1976d2",
-        textTransform: "capitalize",
+        color: '#1976d2',
+        textTransform: 'capitalize',
       },
     },
     {
-      name: "Sent From",
-      key: "sn",
-      description: "Enter name of Company",
-      selector: row => (
+      name: 'Sent From',
+      key: 'sn',
+      description: 'Enter name of Company',
+      selector: (row) => (
         <Typography
-          sx={{fontSize: "0.8rem", whiteSpace: "normal"}}
+          sx={{ fontSize: '0.8rem', whiteSpace: 'normal' }}
           data-tag="allowRowEvents"
         >
           {row.from}
@@ -140,19 +140,19 @@ export const CommunicationEmailList = ({showCreate}) => {
       ),
       sortable: true,
       required: true,
-      inputType: "HIDDEN",
+      inputType: 'HIDDEN',
       style: {
-        color: "#000000",
-        textTransform: "capitalize",
+        color: '#000000',
+        textTransform: 'capitalize',
       },
     },
     {
-      name: "Sent To",
-      key: "sn",
-      description: "Enter name of Company",
-      selector: row => (
+      name: 'Sent To',
+      key: 'sn',
+      description: 'Enter name of Company',
+      selector: (row) => (
         <Typography
-          sx={{fontSize: "0.8rem", whiteSpace: "normal"}}
+          sx={{ fontSize: '0.8rem', whiteSpace: 'normal' }}
           data-tag="allowRowEvents"
         >
           {row.to}
@@ -160,40 +160,40 @@ export const CommunicationEmailList = ({showCreate}) => {
       ),
       sortable: true,
       required: true,
-      inputType: "HIDDEN",
+      inputType: 'HIDDEN',
       style: {
-        color: "#000000",
-        textTransform: "capitalize",
+        color: '#000000',
+        textTransform: 'capitalize',
       },
     },
 
     {
-      name: "Sent At",
-      key: "sn",
-      description: "Enter name of Company",
-      selector: row => (
+      name: 'Sent At',
+      key: 'sn',
+      description: 'Enter name of Company',
+      selector: (row) => (
         <Typography
-          sx={{fontSize: "0.8rem", whiteSpace: "normal"}}
+          sx={{ fontSize: '0.8rem', whiteSpace: 'normal' }}
           data-tag="allowRowEvents"
         >
-          {dayjs(row.createdAt).format("DD/MM/YYYY")}
+          {dayjs(row.createdAt).format('DD/MM/YYYY')}
         </Typography>
       ),
       sortable: true,
       required: true,
-      inputType: "HIDDEN",
+      inputType: 'HIDDEN',
       style: {
-        color: "#000000",
-        textTransform: "capitalize",
+        color: '#000000',
+        textTransform: 'capitalize',
       },
     },
     {
-      name: "Subject",
-      key: "sn",
-      description: "Enter name of Company",
-      selector: row => (
+      name: 'Subject',
+      key: 'sn',
+      description: 'Enter name of Company',
+      selector: (row) => (
         <Typography
-          sx={{fontSize: "0.8rem", whiteSpace: "normal"}}
+          sx={{ fontSize: '0.8rem', whiteSpace: 'normal' }}
           data-tag="allowRowEvents"
         >
           {row.subject}
@@ -201,44 +201,44 @@ export const CommunicationEmailList = ({showCreate}) => {
       ),
       sortable: true,
       required: true,
-      inputType: "HIDDEN",
+      inputType: 'HIDDEN',
       style: {
-        color: "#1976d2",
-        textTransform: "capitalize",
+        color: '#1976d2',
+        textTransform: 'capitalize',
       },
     },
 
     {
-      name: "Status",
-      key: "sn",
-      description: "SN",
+      name: 'Status',
+      key: 'sn',
+      description: 'SN',
       selector: (row, i) => returnStatus(row.status),
       sortable: true,
-      inputType: "HIDDEN",
-      width: "80px",
+      inputType: 'HIDDEN',
+      width: '80px',
     },
   ];
 
   return (
     <Box>
       <TableMenu>
-        <div style={{display: "flex", alignItems: "center"}}>
+        <div style={{ display: 'flex', alignItems: 'center' }}>
           {handleSearch && (
             <div className="inner-table">
               <FilterMenu onSearch={handleSearch} />
             </div>
           )}
-          <h2 style={{margin: "0 10px", fontSize: "0.95rem"}}>Emails</h2>
+          <h2 style={{ margin: '0 10px', fontSize: '0.95rem' }}>Emails</h2>
         </div>
 
         <GlobalCustomButton onClick={handleCreateNew}>
-          <EmailIcon fontSize="small" sx={{marginRight: "5px"}} />
+          <EmailIcon fontSize="small" sx={{ marginRight: '5px' }} />
           Send New Email
         </GlobalCustomButton>
       </TableMenu>
       <Box>
         <CustomTable
-          title={""}
+          title={''}
           columns={emailColumns}
           data={emails}
           pointerOnHover

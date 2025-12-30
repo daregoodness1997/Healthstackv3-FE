@@ -1,68 +1,69 @@
-import {useContext, useState, useEffect, useCallback} from "react";
-import {Box, Grid, IconButton, Typography} from "@mui/material";
-import {Drawer} from "antd";
-import Input from "../../../components/inputs/basic/Input";
+import { useContext, useState, useEffect, useCallback } from 'react';
+import { Box, Grid, IconButton, Typography } from '@mui/material';
+import { Drawer } from 'antd';
+import Input from '../../../components/inputs/basic/Input';
 //import {FormsHeaderText} from "../../../components/texts";
-import {useForm} from "react-hook-form";
+import { useForm } from 'react-hook-form';
 //import GlobalCustomButton from "../../../../components/buttons/CustomButton";
-import GlobalCustomButton from "../../../components/buttons/CustomButton";
-import {CKEditor} from "@ckeditor/ckeditor5-react";
-import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
-import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
-import DocViewer, {DocViewerRenderers} from "@cyntler/react-doc-viewer";
-import EmailIcon from "@mui/icons-material/Email";
-import SendIcon from "@mui/icons-material/Send";
+import GlobalCustomButton from '../../../components/buttons/CustomButton';
+import { CKEditor } from '@ckeditor/ckeditor5-react';
+import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
+import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
+import DocViewer, { DocViewerRenderers } from '@cyntler/react-doc-viewer';
+import EmailIcon from '@mui/icons-material/Email';
+import SendIcon from '@mui/icons-material/Send';
 
-import {ObjectContext, UserContext} from "../../../context";
-import dayjs from "dayjs";
-import CustomTable from "../../../components/customtable";
-import {toast} from "react-toastify";
+import { ObjectContext, UserContext } from '../../../context';
+import dayjs from 'dayjs';
+import CustomTable from '../../../components/customtable';
+import { toast } from 'react-toastify';
 
-import {pdfjs} from "react-pdf";
-import {Document, Page} from "react-pdf";
-import client from "../../../feathers";
-import {EmailsSourceList} from "../../CRM/components/deals/SendLink";
+import { pdfjs } from 'react-pdf';
+import { Document, Page } from 'react-pdf';
+import client from '../../../feathers';
+import { EmailsSourceList } from '../../CRM/components/deals/SendLink';
 //import {ContactsEmailSource, EmailsSourceList} from "../deals/SendLink";
 
-const CommunicationEmailCreate = ({closeModal}) => {
-  const emailServer = client.service("email");
-  const {user} = useContext(UserContext);
-  const {state, showActionLoader, hideActionLoader} = useContext(ObjectContext);
+const CommunicationEmailCreate = ({ closeModal }) => {
+  const emailServer = client.service('email');
+  const { user } = useContext(UserContext);
+  const { state, showActionLoader, hideActionLoader } =
+    useContext(ObjectContext);
   const [emailsModal, setEmailModals] = useState(true);
-  const [selectedEmail, setSelectedEmail] = useState("");
-  const [destinationEmail, setDestinationEmail] = useState("");
+  const [selectedEmail, setSelectedEmail] = useState('');
+  const [destinationEmail, setDestinationEmail] = useState('');
   const [toEmailModal, setToEmailModal] = useState(false);
-  const [emailBody, setEmailBody] = useState("");
+  const [emailBody, setEmailBody] = useState('');
 
   const {
     register,
     setValue,
     reset,
     handleSubmit,
-    formState: {errors},
+    formState: { errors },
   } = useForm();
 
   useEffect(() => {
     //const deal = state.DealModule.selectedDeal.email;
     reset({
-      to: "",
+      to: '',
       name: user.currentEmployee.facilityDetail.facilityName,
-      subject: "",
+      subject: '',
       from: selectedEmail,
     });
   }, [selectedEmail, destinationEmail]);
 
-  const handleSelectEmail = email => {
+  const handleSelectEmail = (email) => {
     setSelectedEmail(email);
     setEmailModals(false);
   };
 
-  const handleSelectDestinationEmail = email => {
+  const handleSelectDestinationEmail = (email) => {
     setDestinationEmail(email);
     setToEmailModal(false);
   };
 
-  const handleSendEmail = async data => {
+  const handleSendEmail = async (data) => {
     const facility = user.currentEmployee.facilityDetail;
     showActionLoader();
 
@@ -77,8 +78,8 @@ const CommunicationEmailCreate = ({closeModal}) => {
       organizationName: facility.facilityName,
       // html: description.concat(attachedHTML),
       html: emailBody,
-      text: "",
-      status: "pending",
+      text: '',
+      status: 'pending',
       ...data,
     };
 
@@ -86,12 +87,12 @@ const CommunicationEmailCreate = ({closeModal}) => {
 
     await emailServer
       .create(document)
-      .then(res => {
+      .then((res) => {
         hideActionLoader();
         closeModal();
         toast.success(`Email was sent successfully`);
       })
-      .catch(err => {
+      .catch((err) => {
         hideActionLoader();
         console.log(err);
         toast.error(`Sorry, Failed to send Email ${err}`);
@@ -101,7 +102,7 @@ const CommunicationEmailCreate = ({closeModal}) => {
   return (
     <Box
       sx={{
-        width: "100%",
+        width: '100%',
       }}
     >
       <Drawer
@@ -123,13 +124,13 @@ const CommunicationEmailCreate = ({closeModal}) => {
       </ModalBox> */}
 
       <Box
-        sx={{display: "flex", justifyContent: "flex-end"}}
+        sx={{ display: 'flex', justifyContent: 'flex-end' }}
         mb={2}
         mt={-1}
         gap={1.5}
       >
         <GlobalCustomButton
-          sx={{marginTop: "5px"}}
+          sx={{ marginTop: '5px' }}
           color="success"
           onClick={() => setEmailModals(true)}
         >
@@ -150,7 +151,7 @@ const CommunicationEmailCreate = ({closeModal}) => {
           <Input
             important
             label="Name"
-            register={register("name", {require: "Please enter Name"})}
+            register={register('name', { require: 'Please enter Name' })}
             errorText={errors?.name?.message}
           />
         </Grid>
@@ -159,7 +160,7 @@ const CommunicationEmailCreate = ({closeModal}) => {
           <Input
             important
             label="Subject"
-            register={register("subject", {require: "Please enter Subject"})}
+            register={register('subject', { require: 'Please enter Subject' })}
             errorText={errors?.subject?.message}
           />
         </Grid>
@@ -168,7 +169,7 @@ const CommunicationEmailCreate = ({closeModal}) => {
           <Input
             important
             label="From"
-            register={register("from", {require: "Please Add Source Email"})}
+            register={register('from', { require: 'Please Add Source Email' })}
             errorText={errors?.from?.message}
             disabled
           />
@@ -178,8 +179,8 @@ const CommunicationEmailCreate = ({closeModal}) => {
           <Input
             important
             label="To"
-            register={register("to", {
-              require: "Please Enter Destination Email",
+            register={register('to', {
+              require: 'Please Enter Destination Email',
             })}
             errorText={errors?.to?.message}
           />
@@ -189,17 +190,17 @@ const CommunicationEmailCreate = ({closeModal}) => {
           <Box>
             <Box
               sx={{
-                height: "40px",
-                backgroundColor: "#0075D9",
-                display: "flex",
-                alignItems: "center",
-                paddingLeft: "25px",
+                height: '40px',
+                backgroundColor: '#0075D9',
+                display: 'flex',
+                alignItems: 'center',
+                paddingLeft: '25px',
               }}
             >
               <Typography
                 sx={{
-                  color: "#ffffff",
-                  fontWeight: "600",
+                  color: '#ffffff',
+                  fontWeight: '600',
                 }}
               >
                 Email Body
@@ -223,7 +224,7 @@ const CommunicationEmailCreate = ({closeModal}) => {
       <Box>
         <GlobalCustomButton onClick={handleSubmit(handleSendEmail)}>
           Send Email
-          <SendIcon fontSize="small" sx={{marginLeft: "4px"}} />
+          <SendIcon fontSize="small" sx={{ marginLeft: '4px' }} />
         </GlobalCustomButton>
       </Box>
     </Box>
