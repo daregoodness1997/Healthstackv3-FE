@@ -1,17 +1,18 @@
 /* eslint-disable */
 import React, { useState, useContext, useEffect } from "react";
-import client from "../../../feathers";
 import { useForm } from "react-hook-form";
-import {ObjectContext } from "../../../context";
+import { ObjectContext } from "../../../context";
 import { toast } from "react-toastify";
 import GlobalCustomButton from "../../../components/buttons/CustomButton";
 import Input from "../../../components/inputs/basic/Input";
 import "react-datepicker/dist/react-datepicker.css";
 import CustomConfirmationDialog from "../../../components/confirm-dialog/confirm-dialog";
+import { useUpdateEmployee, useDeleteEmployee } from "../../../hooks/queries/useEmployees";
 
 export function EmployeeModify() {
     const { register, handleSubmit, setValue, reset, errors } = useForm(); 
-    const EmployeeServ = client.service("employee");
+    const updateEmployee = useUpdateEmployee();
+    const deleteEmployee = useDeleteEmployee();
     const [confirmDialog, setConfirmDialog] = useState(false);
     const { state, setState } = useContext(ObjectContext);
     const Employee = state.EmployeeModule.selectedEmployee;
@@ -65,52 +66,26 @@ export function EmployeeModify() {
     };
   
     const handleDelete = async () => {
-      const dleteId = Employee._id;
-      EmployeeServ.remove(dleteId)
-        .then(() => {
-          reset();
-          toast({
-            message: "Employee deleted succesfully",
-            type: "is-success",
-            dismissible: true,
-            pauseOnHover: true,
-          });
-          changeState();
-        })
-        .catch((err) => {
-         
-          toast({
-            message: "Error deleting Employee, probable network issues or " + err,
-            type: "is-danger",
-            dismissible: true,
-            pauseOnHover: true,
-          });
-        });
-      //}
+      try {
+        await deleteEmployee.mutateAsync(Employee._id);
+        reset();
+        changeState();
+      } catch (err) {
+        toast.error("Error deleting Employee, probable network issues or " + err);
+      }
     };
   
-    const onSubmit = (data, e) => {
+    const onSubmit = async (data, e) => {
       e.preventDefault();
-      data.facility = Employee.facility;
-      EmployeeServ.patch(Employee._id, data)
-        .then(() => {
-          toast({
-            message: "Employee updated succesfully",
-            type: "is-success",
-            dismissible: true,
-            pauseOnHover: true,
-          });
-  
-          changeState();
-        })
-        .catch((err) => {
-          toast({
-            message: "Error updating Employee, probable network issues or " + err,
-            type: "is-danger",
-            dismissible: true,
-            pauseOnHover: true,
-          });
+      try {
+        await updateEmployee.mutateAsync({
+          id: Employee._id,
+          data: { ...data, facility: Employee.facility },
         });
+        changeState();
+      } catch (err) {
+        toast.error("Error updating Employee, probable network issues or " + err);
+      }
     };
   
     return (

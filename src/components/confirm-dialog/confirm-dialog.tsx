@@ -1,87 +1,86 @@
-import * as React from "react";
-import {Box, Typography} from "@mui/material";
-import "./styles.scss";
+import * as React from 'react';
+import { Modal, Space } from 'antd';
+import {
+  WarningOutlined,
+  CheckCircleOutlined,
+  ExclamationCircleOutlined,
+} from '@ant-design/icons';
+import './styles.scss';
 
-import Button from "@mui/material/Button";
-import Dialog from "@mui/material/Dialog";
-import DialogActions from "@mui/material/DialogActions";
-import DialogContent from "@mui/material/DialogContent";
-import DialogContentText from "@mui/material/DialogContentText";
-import DialogTitle from "@mui/material/DialogTitle";
-import Slide from "@mui/material/Slide";
-import {TransitionProps} from "@mui/material/transitions";
-import WarningIcon from "@mui/icons-material/Warning";
-
-import {ObjectContext} from "../../context";
-import GlobalCustomButton from "../buttons/CustomButton";
-
-const Transition = React.forwardRef(function Transition(
-  props: TransitionProps & {
-    children: React.ReactElement<any, any>;
-  },
-  ref: React.Ref<unknown>
-) {
-  return <Slide direction="up" ref={ref} {...props} />;
-});
+import { ObjectContext } from '../../context';
+import GlobalCustomButton from '../buttons/CustomButton';
 
 interface componentProps {
   open: boolean;
   confirmationAction: () => null;
   cancelAction: () => null;
-  type?: string | "danger" | "update" | "create" | "neutral" | "warning";
+  type?: string | 'danger' | 'update' | 'create' | 'neutral' | 'warning';
   message?: string;
   customActionButtonText?: string;
   customCancelButtonText?: string;
 }
 
+const getIcon = (type: string) => {
+  switch (type) {
+    case 'danger':
+      return <WarningOutlined style={{ color: '#ff4d4f', fontSize: '48px' }} />;
+    case 'warning':
+      return (
+        <ExclamationCircleOutlined
+          style={{ color: '#faad14', fontSize: '48px' }}
+        />
+      );
+    case 'create':
+    case 'update':
+    case 'neutral':
+      return (
+        <CheckCircleOutlined style={{ color: '#52c41a', fontSize: '48px' }} />
+      );
+    default:
+      return (
+        <ExclamationCircleOutlined
+          style={{ color: '#1890ff', fontSize: '48px' }}
+        />
+      );
+  }
+};
+
 const CustomConfirmationDialog = ({
   open = false,
   confirmationAction,
   cancelAction,
-  type = "neutral",
-  message = "Are you sure you want to continue?",
-  customActionButtonText = "Continue",
-  customCancelButtonText = "Cancel",
+  type = 'neutral',
+  message = 'Are you sure you want to continue?',
+  customActionButtonText = 'Continue',
+  customCancelButtonText = 'Cancel',
 }: componentProps) => {
-  //const {state, setState} = useContext(ObjectContext);
   return (
-    <Box>
-      <Dialog
-        open={open}
-        onClose={cancelAction}
-        aria-labelledby="alert-dialog-title"
-        aria-describedby="alert-dialog-description"
-        TransitionComponent={Transition}
-      >
-        <div className="confirmation-dialog-container">
-          <div className={`diaglog-color-head dialog-${type}`} />
-
-          <div className="confirmation-dialog-content-container">
-            <div className={`dialog-icon icon-${type}`}>
-              <WarningIcon />
-            </div>
-
-            <div>
-              <Typography sx={{fontSize: "0.95rem"}}>{message}</Typography>
-            </div>
-          </div>
-
-          <div className="confirmation-dialog-actions-container">
-            <GlobalCustomButton
-              color="error"
-              sx={{marginRight: "15px"}}
-              onClick={cancelAction}
-            >
-              {customCancelButtonText}
-            </GlobalCustomButton>
-
-            <GlobalCustomButton color="success" onClick={confirmationAction}>
-              {customActionButtonText}
-            </GlobalCustomButton>
+    <Modal
+      open={open}
+      onCancel={cancelAction}
+      centered
+      footer={
+        <Space style={{ width: '100%', justifyContent: 'flex-end' }}>
+          <GlobalCustomButton color="error" onClick={cancelAction}>
+            {customCancelButtonText}
+          </GlobalCustomButton>
+          <GlobalCustomButton color="success" onClick={confirmationAction}>
+            {customActionButtonText}
+          </GlobalCustomButton>
+        </Space>
+      }
+      width={450}
+    >
+      <div className="confirmation-dialog-container">
+        <div className={`diaglog-color-head dialog-${type}`} />
+        <div className="confirmation-dialog-content-container">
+          <div className={`dialog-icon icon-${type}`}>{getIcon(type)}</div>
+          <div style={{ fontSize: '0.95rem', marginTop: '16px' }}>
+            {message}
           </div>
         </div>
-      </Dialog>
-    </Box>
+      </div>
+    </Modal>
   );
 };
 

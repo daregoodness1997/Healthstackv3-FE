@@ -23,10 +23,13 @@ import {Avatar, IconButton} from "@mui/material";
 import DriveFileRenameOutlineIcon from "@mui/icons-material/DriveFileRenameOutline";
 import PasswordInput from "../../../components/inputs/basic/Password";
 import PasswordIcon from "@mui/icons-material/Password";
+import { useUpdateEmployee, useDeleteEmployee } from "../../../hooks/queries/useEmployees";
 
 
 const EmployeeView = ({closeModal, employee}) => {
   const {register, handleSubmit, setValue, reset, errors} = useForm(); 
+  const updateEmployee = useUpdateEmployee();
+  const deleteEmployee = useDeleteEmployee();
   const [editing, setEditing] = useState(false);
   const EmployeeServ = client.service("employee");
   const [confirmDialog, setConfirmDialog] = useState(false);
@@ -85,41 +88,34 @@ const EmployeeView = ({closeModal, employee}) => {
 
   const handleDelete = async () => {
     showActionLoader();
-    const dleteId = employee._id;
-    EmployeeServ.remove(dleteId)
-      .then(res => {
-        hideActionLoader();
-        reset();
-        setConfirmDialog(false);
-        toast.success("Employee deleted succesfully");
-        changeState({});
-      })
-      .catch(err => {
-        hideActionLoader();
-        setConfirmDialog(false);
-        toast.error(
-          "Error deleting Employee, probable network issues or " + err
-        );
-      });
+    try {
+      await deleteEmployee.mutateAsync(employee._id);
+      hideActionLoader();
+      reset();
+      setConfirmDialog(false);
+      changeState({});
+    } catch (err) {
+      hideActionLoader();
+      setConfirmDialog(false);
+      toast.error("Error deleting Employee, probable network issues or " + err);
+    }
   };
 
-  const onSubmit = (data, e) => {
+  const onSubmit = async (data, e) => {
     e.preventDefault();
     setUpatingEmployee(true);
-    data.facility = employee.facility;
-    EmployeeServ.patch(employee._id, data)
-      .then(res => {
-        setUpatingEmployee(false);
-        toast.success("Employee Data succesfully updated");
-        changeState(res);
-        closeModal();
-      })
-      .catch(err => {
-        setUpatingEmployee(false);
-        toast.error(
-          "Error updating Employee, probable network issues or " + err
-        );
+    try {
+      const res = await updateEmployee.mutateAsync({
+        id: employee._id,
+        data: { ...data, facility: employee.facility },
       });
+      setUpatingEmployee(false);
+      changeState(res);
+      closeModal();
+    } catch (err) {
+      setUpatingEmployee(false);
+      toast.error("Error updating Employee, probable network issues or " + err);
+    }
   };
 
   return (

@@ -1,5 +1,6 @@
 import {useState, useEffect, useCallback, useContext} from "react";
 import {Box, Typography} from "@mui/material";
+import {Drawer} from "antd";
 import EmailIcon from "@mui/icons-material/Email";
 import client from "../../../feathers";
 
@@ -9,20 +10,21 @@ import dayjs from "dayjs";
 import {TableMenu} from "../../../ui/styled/global";
 import FilterMenu from "../../../components/utilities/FilterMenu";
 import GlobalCustomButton from "../../../components/buttons/CustomButton";
-import ModalBox from "../../../components/modal";
 import CommunicationEmailCreate from "./CreateEmail";
 
 const CommunicationEmail = () => {
   const [createModal, setCreateModal] = useState(false);
   return (
     <Box p={2}>
-      <ModalBox
+      <Drawer
+        title="Send Email"
         open={createModal}
         onClose={() => setCreateModal(false)}
-        header="Send Email"
+        width={"60%"}
+        placement="right"
       >
         <CommunicationEmailCreate closeModal={() => setCreateModal(false)} />
-      </ModalBox>
+      </Drawer>
       <Box>
         <CommunicationEmailList showCreate={() => setCreateModal(true)} />
       </Box>

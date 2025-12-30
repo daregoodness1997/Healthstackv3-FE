@@ -1,46 +1,53 @@
-import { Box } from '@mui/material';
-import Fade from '@mui/material/Fade';
-import Modal from '@mui/material/Modal';
+import { Drawer } from 'antd';
 import React from 'react';
 
 interface ModalProps {
   open: boolean;
   onClose?: () => void;
   children: React.ReactNode;
+  header?: string;
+  width?: string | number;
+  footer?: React.ReactNode;
 }
-const style = {
-  width: '68%',
-  maxWidth: '90%',
-  height: '80%',
-  maxHeight: '100%',
-  bgcolor: '#fff',
-  boxShadow: 24,
-  p: 4,
-  borderRadius: '6px',
-  minWidth: '350px !important',
-};
 
-const ModalBox: React.FC<ModalProps> = ({ open, onClose, children }) => (
-  <>
-    <Modal
-      aria-labelledby='transition-modal-title'
-      aria-describedby='transition-modal-description'
-      open={open}
-      onClose={onClose}
-      closeAfterTransition
-      // BackdropComponent={Backdrop}
-      BackdropProps={{
-        timeout: 500,
-      }}
-      sx={{ width: '100%', display: 'grid', placeItems: 'center ' }}
-    >
-      <Fade in={open}>
-        <Box sx={style}>
-          <div style={{ height: '100%', overflowY: 'auto' }}>{children}</div>
-        </Box>
-      </Fade>
-    </Modal>
-  </>
+const ModalBox: React.FC<ModalProps> = ({
+  open,
+  onClose,
+  children,
+  header,
+  width,
+  footer = null,
+}) => (
+  <Drawer
+    title={
+      header ? (
+        <h1
+          style={{
+            color: '#33415C',
+            fontWeight: '500',
+            lineHeight: '1.5',
+            fontSize: '18px',
+            margin: 0,
+          }}
+        >
+          {header}
+        </h1>
+      ) : null
+    }
+    open={open}
+    onClose={onClose}
+    footer={footer}
+    width={width || 720}
+    placement="right"
+    destroyOnClose
+    styles={{
+      body: {
+        paddingBottom: footer ? 60 : 24,
+      },
+    }}
+  >
+    {children}
+  </Drawer>
 );
 
 export default ModalBox;

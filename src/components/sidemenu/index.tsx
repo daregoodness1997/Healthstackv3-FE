@@ -732,6 +732,7 @@ function SideMenu({ isOpen }: any) {
   return (
     <Sider
       collapsible
+      defaultCollapsed={true}
       collapsed={collapsed}
       onCollapse={setCollapsed}
       width={260}

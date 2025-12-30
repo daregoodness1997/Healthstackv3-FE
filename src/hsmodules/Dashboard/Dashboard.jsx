@@ -558,7 +558,10 @@ const Dashboard = ({ children }) => {
   const facilityLogo = user?.currentEmployee?.facilityDetail?.facilitylogo;
 
   return (
-    <Layout style={{ minHeight: '100vh', display: 'flex' }}>
+    <Layout
+      style={{ minHeight: '100vh', display: 'flex' }}
+      defaultCollapsed={false}
+    >
       <Sider
         trigger={null}
         collapsible

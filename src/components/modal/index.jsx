@@ -1,14 +1,4 @@
-import { Modal } from "antd";
-import React from "react";
-
-// interface ModalProps {
-//   open: boolean;
-//   onClose?: () => void;
-//   children?: React.ReactNode | undefined;
-//   header?: string;
-//   width?: string | number;
-//   footer?: React.ReactNode;
-// }
+import { Drawer } from 'antd';
 
 const ModalBox = ({
   open,
@@ -19,18 +9,18 @@ const ModalBox = ({
   footer = null,
   ...props
 }) => {
-  const modalWidth = width || "auto";
+  const drawerWidth = width || 720;
 
   return (
-    <Modal
+    <Drawer
       title={
         header ? (
           <h1
             style={{
-              color: "#33415C",
-              fontWeight: "500",
-              lineHeight: "1.5",
-              fontSize: "18px",
+              color: '#33415C',
+              fontWeight: '500',
+              lineHeight: '1.5',
+              fontSize: '18px',
               margin: 0,
             }}
           >
@@ -39,22 +29,20 @@ const ModalBox = ({
         ) : null
       }
       open={open}
-      onCancel={onClose}
+      onClose={onClose}
       footer={footer}
-      width={modalWidth}
-      centered
+      width={drawerWidth}
+      placement="right"
       destroyOnClose
       styles={{
         body: {
-          maxHeight: "70vh",
-          overflowY: "auto",
-          padding: "10px",
+          paddingBottom: footer ? 60 : 24,
         },
       }}
       {...props}
     >
       {children}
-    </Modal>
+    </Drawer>
   );
 };
 

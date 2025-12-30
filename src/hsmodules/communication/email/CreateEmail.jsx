@@ -1,7 +1,7 @@
 import {useContext, useState, useEffect, useCallback} from "react";
 import {Box, Grid, IconButton, Typography} from "@mui/material";
+import {Drawer} from "antd";
 import Input from "../../../components/inputs/basic/Input";
-import ModalBox from "../../../components/modal";
 //import {FormsHeaderText} from "../../../components/texts";
 import {useForm} from "react-hook-form";
 //import GlobalCustomButton from "../../../../components/buttons/CustomButton";
@@ -10,7 +10,6 @@ import {CKEditor} from "@ckeditor/ckeditor5-react";
 import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import DocViewer, {DocViewerRenderers} from "@cyntler/react-doc-viewer";
-import Drawer from "@mui/material/Drawer";
 import EmailIcon from "@mui/icons-material/Email";
 import SendIcon from "@mui/icons-material/Send";
 
@@ -102,16 +101,18 @@ const CommunicationEmailCreate = ({closeModal}) => {
   return (
     <Box
       sx={{
-        width: "50vw",
+        width: "100%",
       }}
     >
-      <ModalBox
+      <Drawer
+        title="Please Select Your Email Source"
         open={emailsModal}
-        //onClose={() => setEmailModals(false)}
-        header="Plese Select Your Email Source"
+        onClose={() => setEmailModals(false)}
+        width={600}
+        placement="right"
       >
         <EmailsSourceList selectEmail={handleSelectEmail} />
-      </ModalBox>
+      </Drawer>
 
       {/* <ModalBox
         open={toEmailModal}

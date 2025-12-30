@@ -1,15 +1,15 @@
 import React, { useState, useContext } from 'react';
-import { Modal } from 'antd';
+import { Drawer } from 'antd';
 import { UserContext, ObjectContext } from '../../../context';
 import EmployeeView from './EmployeeView';
 import UploadEmployeeComponent from '../UploadEmployees';
 import EmployeeListRefactored from '../refactored/EmployeeListRefactored';
 import { useEmployeeStore } from '../../../stores/employeeStore';
 import { toast } from 'react-toastify';
-import client from '../../../feathers';
+import { useCreateEmployee } from '../../../hooks/queries/useEmployees';
 
 export function EmployeeList({ showCreateModal }) {
-  const EmployeeServ = client.service('employee');
+  const createEmployeeMutation = useCreateEmployee();
   const { setState, showActionLoader, hideActionLoader } =
     useContext(ObjectContext);
   const { user } = useContext(UserContext);
@@ -35,17 +35,13 @@ export function EmployeeList({ showCreateModal }) {
       roles: ['Communication'],
     };
 
-    await EmployeeServ.create(employeeData)
-      .then(() => {
-        toast.success(
-          `Employee ${data.firstname} ${data.lastname} successfully created`,
-        );
-      })
-      .catch((err) => {
-        toast.error(
-          `Sorry, You weren't able to create an Employee ${data.firstname} ${data.lastname}. ${err}`,
-        );
-      });
+    try {
+      await createEmployeeMutation.mutateAsync(employeeData);
+    } catch (err) {
+      toast.error(
+        `Sorry, You weren't able to create an Employee ${data.firstname} ${data.lastname}. ${err}`,
+      );
+    }
   };
 
   const createMultipleEmployees = async (data) => {
@@ -71,37 +67,39 @@ export function EmployeeList({ showCreateModal }) {
             onOpenUpload={() => setUploadModal(true)}
           />
 
-          {/* Upload Modal */}
-          <Modal
+          {/* Upload Drawer */}
+          <Drawer
             title="Upload and Create Multiple Employees"
             open={uploadModal}
-            onCancel={() => setUploadModal(false)}
-            footer={null}
-            width={800}
+            onClose={() => setUploadModal(false)}
+            width={1400}
+            placement="right"
             destroyOnClose
           >
             <UploadEmployeeComponent
               closeModal={() => setUploadModal(false)}
               createEmployees={createMultipleEmployees}
             />
-          </Modal>
+          </Drawer>
 
-          {/* Detail Modal */}
-          <Modal
+          {/* Detail Drawer */}
+          <Drawer
             title="Employee Details"
-            open={showModal}
-            onCancel={handleCloseDetailModal}
-            footer={null}
+            open={showModal && selectedEmployee}
+            onClose={handleCloseDetailModal}
             width="90%"
+            placement="right"
             destroyOnClose
           >
-            <EmployeeView
-              employee={selectedEmployee}
-              open={showModal}
-              closeModal={handleCloseDetailModal}
-              setOpen={handleCloseDetailModal}
-            />
-          </Modal>
+            {selectedEmployee && (
+              <EmployeeView
+                employee={selectedEmployee}
+                open={showModal}
+                closeModal={handleCloseDetailModal}
+                setOpen={handleCloseDetailModal}
+              />
+            )}
+          </Drawer>
         </div>
       ) : (
         <div>Loading...</div>

@@ -1,6 +1,6 @@
 /* eslint-disable */
 import React, { useState } from 'react';
-import { Modal } from 'antd';
+import { Drawer } from 'antd';
 import 'react-datepicker/dist/react-datepicker.css';
 import { EmployeeForm } from './employee/EmployeeForm';
 import { EmployeeList } from './employee/EmployeeList';
@@ -38,38 +38,38 @@ export default function Employee() {
 
   return (
     <>
-      <Modal
+      <Drawer
         title="Create New Employee"
         open={createModal}
-        onCancel={handleHideCreateModal}
-        footer={null}
+        onClose={handleHideCreateModal}
         width={800}
+        placement="right"
         destroyOnClose
       >
         <EmployeeForm open={createModal} setOpen={handleHideCreateModal} />
-      </Modal>
+      </Drawer>
 
-      <Modal
+      <Drawer
         title="Employee Details"
         open={detailModal}
-        onCancel={handleHideDetailModal}
-        footer={null}
+        onClose={handleHideDetailModal}
         width="90%"
+        placement="right"
         destroyOnClose
       >
         <EmployeeDetail showModifyModal={handleModifyModal} />
-      </Modal>
+      </Drawer>
 
-      <Modal
+      <Drawer
         title="Edit Employee"
         open={modifyModal}
-        onCancel={handleHideModifyModal}
-        footer={null}
+        onClose={handleHideModifyModal}
         width={800}
+        placement="right"
         destroyOnClose
       >
         <EmployeeModify />
-      </Modal>
+      </Drawer>
 
       <EmployeeList
         showCreateModal={handleCreateModal}

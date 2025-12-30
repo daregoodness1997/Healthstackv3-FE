@@ -1,54 +1,126 @@
-import React, { useContext, useEffect } from "react";
-import { useForm } from "react-hook-form";
-import { toast } from "react-toastify";
-import Input from "../../../components/inputs/basic/Input";
-import { ObjectContext, UserContext } from "../../../context";
-import { yupResolver } from "@hookform/resolvers/yup";
-import client from "../../../feathers";
-import ControlPointIcon from "@mui/icons-material/ControlPoint";
-import GlobalCustomButton from "../../../components/buttons/CustomButton";
-import { Box } from "@mui/system";
-import { GridBox } from "../../app/styles";
-import PasswordInput from "../../../components/inputs/basic/Password";
-import { createEmployeeSchema } from "../../GlobalAdmin/schema";
+import React, { useContext, useEffect } from 'react';
+import { useForm } from 'react-hook-form';
+import { toast } from 'react-toastify';
+import Input from '../../../components/inputs/basic/Input';
+import CustomSelect from '../../../components/inputs/basic/Select';
+import { ObjectContext, UserContext } from '../../../context';
+import { yupResolver } from '@hookform/resolvers/yup';
+import ControlPointIcon from '@mui/icons-material/ControlPoint';
+import GlobalCustomButton from '../../../components/buttons/CustomButton';
+import { Box } from '@mui/system';
+import { GridBox } from '../../app/styles';
+import PasswordInput from '../../../components/inputs/basic/Password';
+import { createEmployeeSchema } from '../../GlobalAdmin/schema';
+import { useCreateEmployee } from '../../../hooks/queries/useEmployees';
 
 export const EmployeeForm = ({ open, setOpen }) => {
-  const EmployeeServ = client.service("employee");
   const { user } = useContext(UserContext);
   const { showActionLoader, hideActionLoader } = useContext(ObjectContext);
+  const createEmployee = useCreateEmployee();
+
+  const professions = [
+    'Medical Doctor',
+    'Nurse',
+    'Pharmacist',
+    'Laboratory Scientist',
+    'Radiographer',
+    'Physiotherapist',
+    'Dentist',
+    'Optometrist',
+    'Medical Records Officer',
+    'Health Information Manager',
+    'Administrator',
+    'Accountant',
+    'Human Resources Officer',
+    'IT Specialist',
+    'Other',
+  ];
+
+  const positions = [
+    'Chief Executive Officer (CEO)',
+    'Chief Medical Officer (CMO)',
+    'Chief Nursing Officer (CNO)',
+    'Medical Director',
+    'Head of Department',
+    'Senior Consultant',
+    'Consultant',
+    'Senior Registrar',
+    'Registrar',
+    'Medical Officer',
+    'Administrator',
+    'Manager',
+    'Supervisor',
+    'Officer',
+    'Other',
+  ];
+
+  const departments = [
+    'Administration',
+    'Medical',
+    'Nursing',
+    'Pharmacy',
+    'Laboratory',
+    'Radiology',
+    'Emergency',
+    'Surgery',
+    'Pediatrics',
+    'Obstetrics & Gynecology',
+    'Internal Medicine',
+    'Orthopedics',
+    'Cardiology',
+    'Finance',
+    'Human Resources',
+    'IT',
+    'Records',
+    'Other',
+  ];
+
+  const departmentUnits = [
+    'Executive',
+    'Management',
+    'Operations',
+    'Clinical',
+    'Support Services',
+    'Administrative',
+    'Technical',
+    'Other',
+  ];
 
   const {
     register,
     handleSubmit,
     reset,
     clearErrors,
+    control,
     formState: { isSubmitSuccessful, errors },
   } = useForm({
     resolver: yupResolver(createEmployeeSchema),
     defaultValues: {
-      password: "",
-      email: "",
+      password: '',
+      email: '',
     },
   });
 
   const submit = async (data) => {
     showActionLoader();
-    data.createdby = user._id;
-    data.facility = user.currentEmployee.facility;
-    data.imageurl = "";
-    data.roles = ["Communication"];
+    
+    const employeeData = {
+      ...data,
+      createdby: user._id,
+      facility: user.currentEmployee.facility,
+      imageurl: '',
+      roles: ['Communication'],
+    };
 
-    await EmployeeServ.create(data)
-      .then((res) => {
-        hideActionLoader();
-        toast.success(`Employee successfully created`);
-        setOpen(false);
-        reset();
-      })
-      .catch((err) => {
-        hideActionLoader();
-        toast.error(`Sorry, You weren't able to create an Employee. ${err}`);
-      });
+    try {
+      await createEmployee.mutateAsync(employeeData);
+      hideActionLoader();
+      setOpen(false);
+      reset();
+    } catch (err) {
+      hideActionLoader();
+      toast.error(`Sorry, You weren't able to create an Employee. ${err}`);
+    }
   };
 
   useEffect(() => {
@@ -56,22 +128,11 @@ export const EmployeeForm = ({ open, setOpen }) => {
   }, []);
 
   return (
-    <Box sx={{ width: "50vw" }}>
-
-      <Box display="flex" justifyContent="flex-end">
-        <GlobalCustomButton
-          type="submit"
-          //loading={loading}
-          onClick={handleSubmit(submit)}
-        >
-          <ControlPointIcon fontSize="small" sx={{ marginRight: "5px" }} />
-          Create New Employee
-        </GlobalCustomButton>
-      </Box>
-      <form>
+    <Box>
+      <form onSubmit={handleSubmit(submit)}>
         <GridBox>
           <Input
-            register={register("firstname")}
+            control={control}
             name="firstname"
             type="text"
             label="First Name"
@@ -79,7 +140,7 @@ export const EmployeeForm = ({ open, setOpen }) => {
             important
           />
           <Input
-            register={register("lastname")}
+            control={control}
             name="lastname"
             type="text"
             label="Last Name"
@@ -87,27 +148,29 @@ export const EmployeeForm = ({ open, setOpen }) => {
             important
           />
 
-          <Input
-            register={register("position")}
+          <CustomSelect
+            control={control}
             name="position"
-            type="text"
             label="Position"
-            important
+            options={positions}
+            placeholder="Select position"
             errorText={errors?.position?.message}
+            important
           />
         </GridBox>
         <GridBox>
-          <Input
-            register={register("profession")}
+          <CustomSelect
+            control={control}
             name="profession"
-            type="text"
             label="Profession"
+            options={professions}
+            placeholder="Select profession"
             errorText={errors?.profession?.message}
             important
           />
 
           <Input
-            register={register("phone")}
+            control={control}
             name="phone"
             type="tel"
             label="Phone No"
@@ -115,7 +178,7 @@ export const EmployeeForm = ({ open, setOpen }) => {
             important
           />
           <Input
-            register={register("email")}
+            control={control}
             name="email"
             type="email"
             label="Email"
@@ -124,23 +187,26 @@ export const EmployeeForm = ({ open, setOpen }) => {
           />
         </GridBox>
         <GridBox>
-          <Input
-            register={register("department")}
+          <CustomSelect
+            control={control}
             name="department"
-            type="text"
             label="Department"
+            options={departments}
+            placeholder="Select department"
             errorText={errors?.department?.message}
             important
           />
-          <Input
-            register={register("deptunit")}
+          <CustomSelect
+            control={control}
             name="deptunit"
-            type="text"
             label="Department Unit"
+            options={departmentUnits}
+            placeholder="Select unit"
             errorText={errors?.deptunit?.message}
           />
           <PasswordInput
-            register={register("password")}
+            control={control}
+            name="password"
             type="text"
             label="Password"
             errorText={errors?.password?.message}
@@ -148,6 +214,16 @@ export const EmployeeForm = ({ open, setOpen }) => {
             important
           />
         </GridBox>
+
+        <Box display="flex" justifyContent="flex-end">
+          <GlobalCustomButton
+            type="submit"
+            loading={createEmployee.isPending}
+          >
+            <ControlPointIcon fontSize="small" sx={{ marginRight: '5px' }} />
+            Create New Employee
+          </GlobalCustomButton>
+        </Box>
       </form>
     </Box>
   );

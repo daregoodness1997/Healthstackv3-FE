@@ -179,8 +179,8 @@ export const GridBox = styled.div`
   grid-template-columns: repeat(3, 1fr);
   align-items: flex-start;
   grid-gap: 1rem;
-  margin-bottom: 2rem;
-  margin-top: 2rem;
+  margin-bottom: 1rem;
+  margin-top: 1rem;
 `;
 
 export const ViewBox = styled.div`

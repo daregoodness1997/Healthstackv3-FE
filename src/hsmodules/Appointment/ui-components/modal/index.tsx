@@ -1,95 +1,54 @@
-import { Box, IconButton } from '@mui/material';
-import Fade from '@mui/material/Fade';
-import Modal from '@mui/material/Modal';
+import { Drawer } from 'antd';
 import React from 'react';
-import CloseIcon from '@mui/icons-material/Close';
 
 interface ModalProps {
   open: boolean;
   onClose?: () => void;
   children?: React.ReactNode | undefined;
-
-  header?: 'string';
-  width?: 'string';
+  header?: string;
+  width?: string | number;
+  footer?: React.ReactNode;
 }
-const style = {
-  width: '60%',
-  bgcolor: '#FAFAFA',
-
-  boxShadow: 24,
-  p: 4,
-  borderRadius: '6px',
-  overflow: 'hidden',
-  //minWidth: "100px !important",
-};
 
 const ModalBox: React.FC<ModalProps> = ({
   open,
   onClose,
   children,
   header,
+  width,
+  footer = null,
 }) => (
-  <>
-    <Modal
-      aria-labelledby="transition-modal-title"
-      aria-describedby="transition-modal-description"
-      open={open}
-      onClose={onClose}
-      closeAfterTransition
-      // BackdropComponent={Backdrop}
-      BackdropProps={{
-        timeout: 500,
-      }}
-      sx={{
-        width: '100%',
-        display: 'grid',
-        placeItems: 'center ',
-      }}
-    >
-      <Fade in={open}>
-        <Box sx={style}>
-          <div
-            style={{
-              height: '100%',
-              overflowY: 'hidden',
-            }}
-          >
-            {header && (
-              <Box
-                style={{
-                  width: '100%',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'space-between',
-                }}
-                mb={2}
-              >
-                <h1
-                  style={{
-                    color: '#33415C',
-                    fontWeight: '500',
-                    lineHeight: '1.5',
-                    fontSize: '20px',
-                    fontStyle: 'SemiBold',
-                  }}
-                >
-                  {header}
-                </h1>
-
-                {onClose && (
-                  <IconButton onClick={onClose}>
-                    <CloseIcon />
-                  </IconButton>
-                )}
-              </Box>
-            )}
-
-            {children}
-          </div>
-        </Box>
-      </Fade>
-    </Modal>
-  </>
+  <Drawer
+    title={
+      header ? (
+        <h1
+          style={{
+            color: '#33415C',
+            fontWeight: '500',
+            lineHeight: '1.5',
+            fontSize: '20px',
+            margin: 0,
+          }}
+        >
+          {header}
+        </h1>
+      ) : null
+    }
+    open={open}
+    onClose={onClose}
+    footer={footer}
+    width={width || 720}
+    placement="right"
+    destroyOnClose
+    styles={{
+      body: {
+        backgroundColor: '#FAFAFA',
+        paddingBottom: footer ? 60 : 24,
+      },
+    }}
+  >
+    {children}
+  </Drawer>
 );
 
 export default ModalBox;

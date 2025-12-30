@@ -1,5 +1,5 @@
 import React, { useState, useContext } from 'react';
-import { Modal } from 'antd';
+import { Drawer } from 'antd';
 import { UserContext, ObjectContext } from '../../context';
 import BandView from './BandView';
 import { BandForm } from './BandForm';
@@ -36,25 +36,25 @@ export default function Bands() {
         onOpenDetail={handleDetailModal}
       />
 
-      {/* Create/Edit Modal */}
-      <Modal
+      {/* Create/Edit Drawer */}
+      <Drawer
         title={state.BandModule?.show === 'edit' ? 'Edit Band' : 'Create Band'}
         open={createModal}
-        onCancel={handleHideCreateModal}
-        footer={null}
+        onClose={handleHideCreateModal}
         width={700}
+        placement="right"
         destroyOnClose
       >
         <BandForm open={createModal} setOpen={handleHideCreateModal} />
-      </Modal>
+      </Drawer>
 
-      {/* Detail Modal */}
-      <Modal
+      {/* Detail Drawer */}
+      <Drawer
         title="Band Details"
         open={showModal}
-        onCancel={handleCloseDetailModal}
-        footer={null}
+        onClose={handleCloseDetailModal}
         width={800}
+        placement="right"
         destroyOnClose
       >
         <BandView
@@ -62,7 +62,7 @@ export default function Bands() {
           open={showModal}
           setOpen={handleCloseDetailModal}
         />
-      </Modal>
+      </Drawer>
     </div>
   );
 }

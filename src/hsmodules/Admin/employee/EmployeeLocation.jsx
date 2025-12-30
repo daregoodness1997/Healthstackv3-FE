@@ -5,54 +5,45 @@ import React, {
   useCallback,
 } from "react";
 import "../modules-list.scss";
-import client from "../../../feathers";
 import CheckboxTree from "react-checkbox-tree";
-import {useForm} from "react-hook-form";
-import {UserContext, ObjectContext} from "../../../context";
-import {toast} from "react-toastify";
+import { useForm } from "react-hook-form";
+import { UserContext, ObjectContext } from "../../../context";
+import { toast } from "react-toastify";
 import GlobalCustomButton from "../../../components/buttons/CustomButton";
-import {Box} from "@mui/material";
+import { Box } from "@mui/material";
 import CustomConfirmationDialog from "../../../components/confirm-dialog/confirm-dialog";
 import "react-checkbox-tree/lib/react-checkbox-tree.css";
+import { useLocations } from "../../../hooks/queries/useLocations";
+import { useUpdateEmployee } from "../../../hooks/queries/useEmployees";
 
-const EmployeeLocation = ({handlecloseModal}) => {
-  const locationServer = client.service("location");
-  const [locations, setLocations] = useState([]);
-  const EmployeeServ = client.service("employee");
+const EmployeeLocation = ({ handlecloseModal }) => {
   const [confirmDialog, setConfirmDialog] = useState(false);
   const [confirmReset, setConfirmReset] = useState(false);
 
-  const {user} = useContext(UserContext);
-  const {state, setState, showActionLoader, hideActionLoader} =
+  const { user } = useContext(UserContext);
+  const { state, setState, showActionLoader, hideActionLoader } =
     useContext(ObjectContext);
+  const updateEmployee = useUpdateEmployee();
   const [checked, setChecked] = useState([]);
   const [expanded, setExpanded] = useState([]);
 
-  // const currentEmployee = state.EmployeeModule.selectedEmployee;
   const prevRoles = state.EmployeeModule.selectedEmployee.locations || [];
-  const prevRolesIds = prevRoles.map(item => {
-    return item._id;
+  const prevRolesIds = prevRoles.map(item => item._id);
+
+  const { data: locationsData } = useLocations({
+    facilityId: user.currentEmployee.facilityDetail._id,
+    limit: 200,
+    sortBy: 'createdAt',
+    sortOrder: 'desc',
   });
 
-  const getFacilityLocations = useCallback(async () => {
-    const resp = await locationServer.find({
-      query: {
-        facility: user.currentEmployee.facilityDetail._id,
-        $limit: 200,
-        $sort: {
-          createdAt: -1,
-        },
-      },
-    });
-    setLocations(resp.data);
-    setChecked(prevRolesIds);
-  }, [user.currentEmployee]);
+  const locations = locationsData?.data || [];
 
   useEffect(() => {
-    getFacilityLocations();
-  }, [getFacilityLocations]);
+    setChecked(prevRolesIds);
+  }, []);
 
-  const updateEmployeeLocations = () => {
+  const updateEmployeeLocations = async () => {
     showActionLoader();
     const employee = state.EmployeeModule.selectedEmployee;
 
@@ -66,58 +57,55 @@ const EmployeeLocation = ({handlecloseModal}) => {
 
     const newLocations = locationsObject.filter(item => item !== undefined);
 
-    //return console.log(newLocations);
-
-    EmployeeServ.patch(employee._id, {locations: newLocations})
-      .then(res => {
-        setConfirmDialog(false);
-        hideActionLoader();
-        toast.success("Employee Locations updated succesfully");
-        const newEmployeeModule = {
-          selectedEmployee: res,
-          show: "detail",
-        };
-        setState(prevstate => ({
-          ...prevstate,
-          EmployeeModule: newEmployeeModule,
-        }));
-
-        handlecloseModal();
-      })
-      .catch(err => {
-        setConfirmDialog(false);
-        hideActionLoader();
-        toast.error("Error updating Employee Locations" + err);
+    try {
+      const res = await updateEmployee.mutateAsync({
+        id: employee._id,
+        data: { locations: newLocations },
       });
+      setConfirmDialog(false);
+      hideActionLoader();
+      const newEmployeeModule = {
+        selectedEmployee: res,
+        show: "detail",
+      };
+      setState(prevstate => ({
+        ...prevstate,
+        EmployeeModule: newEmployeeModule,
+      }));
+      handlecloseModal();
+    } catch (err) {
+      setConfirmDialog(false);
+      hideActionLoader();
+      toast.error("Error updating Employee Locations" + err);
+    }
   };
 
-  const resetEmployeeLocations = () => {
+  const resetEmployeeLocations = async () => {
     showActionLoader();
 
     const employee = state.EmployeeModule.selectedEmployee;
 
-    EmployeeServ.patch(employee._id, {locations: []})
-      .then(res => {
-        setConfirmDialog(false);
-        hideActionLoader();
-        toast.success("Employee Locations Reset succesfully");
-
-        const newEmployeeModule = {
-          selectedEmployee: res,
-          show: "detail",
-        };
-        setState(prevstate => ({
-          ...prevstate,
-          EmployeeModule: newEmployeeModule,
-        }));
-
-        handlecloseModal();
-      })
-      .catch(err => {
-        setConfirmDialog(false);
-        hideActionLoader();
-        toast.error("Error Reseting Employee Locations" + err);
+    try {
+      const res = await updateEmployee.mutateAsync({
+        id: employee._id,
+        data: { locations: [] },
       });
+      setConfirmDialog(false);
+      hideActionLoader();
+      const newEmployeeModule = {
+        selectedEmployee: res,
+        show: "detail",
+      };
+      setState(prevstate => ({
+        ...prevstate,
+        EmployeeModule: newEmployeeModule,
+      }));
+      handlecloseModal();
+    } catch (err) {
+      setConfirmDialog(false);
+      hideActionLoader();
+      toast.error("Error Reseting Employee Locations" + err);
+    }
   };
 
   ////////GET VARIOUS TYPES OF LOCATIONS ONLY

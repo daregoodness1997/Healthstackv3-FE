@@ -1,6 +1,7 @@
 import { useEffect, useState, useContext } from 'react';
 import {
   Modal,
+  Drawer,
   Button,
   Space,
   Table,
@@ -228,25 +229,25 @@ const BankAccount = () => {
         scroll={{ x: 1000 }}
       />
 
-      <Modal
+      <Drawer
         title="Add a New Bank Account"
         open={bankAccountModal}
-        onCancel={() => setBankAccountModal(false)}
-        footer={null}
+        onClose={() => setBankAccountModal(false)}
         width={800}
+        placement="right"
       >
         <AddNewBankAccount closeModal={() => setBankAccountModal(false)} />
-      </Modal>
+      </Drawer>
 
-      <Modal
+      <Drawer
         title="Bank Account Details"
         open={detailModal}
-        onCancel={() => setDetailModal(false)}
-        footer={null}
+        onClose={() => setDetailModal(false)}
         width={800}
+        placement="right"
       >
         <BankAccountDetail closeModal={() => setDetailModal(false)} />
-      </Modal>
+      </Drawer>
     </div>
   );
 };

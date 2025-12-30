@@ -7,16 +7,15 @@ import CustomSelect from '../../components/inputs/basic/Select';
 import { UserContext } from '../../context';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { bandTypeOptions } from '../../dummy-data';
-import client from '../../feathers';
 import GlobalCustomButton from '../../components/buttons/CustomButton';
 import CreateIcon from '@mui/icons-material/Create';
 import { Box } from '@mui/system';
 import { Grid } from '@mui/material';
 import { createBandSchema } from './schema';
-import ModalBox from '../../components/modal';
+import { useCreateBand } from '../../hooks/queries/useBands';
 
 export const BandForm = ({ open, setOpen }) => {
-  const BandServ = client.service('bands');
+  const createBand = useCreateBand();
   const data = localStorage.getItem('band');
   const { user } = useContext(UserContext);
 
@@ -37,61 +36,60 @@ export const BandForm = ({ open, setOpen }) => {
   });
 
   const submit = useCallback(
-    async (data, e) => {
-      e.preventDefault();
-      await BandServ.create(data)
-        .then(() => {
-          toast.success(`Band successfully created`);
-          setOpen(false);
-          reset();
-        })
-        .catch((err) => {
-          toast.error(`Sorry, You weren't able to create a band. ${err}`);
-        });
+    async (formData) => {
+      try {
+        await createBand.mutateAsync(formData);
+        setOpen(false);
+        reset();
+      } catch (err) {
+        toast.error(`Sorry, You weren't able to create a band. ${err}`);
+      }
     },
-    [data],
+    [createBand, setOpen, reset],
   );
 
   return (
-    <ModalBox open={open} onClose={setOpen} width="40vw" header={'Create Band'}>
-      <form>
-        <Box display="flex" justifyContent="flex-end" mb="1rem">
-          <GlobalCustomButton
-            onClick={handleSubmit(submit)}
-            style={{ marginTop: '1rem' }}
-          >
-            <CreateIcon fontSize="small" sx={{ marginRight: '5px' }} />
-            Create Band
-          </GlobalCustomButton>
+    <form onSubmit={handleSubmit(submit)}>
+      <Grid>
+        <Box mb="1rem">
+          <Input
+            label="Name of Band"
+            control={control}
+            name="name"
+            errorText={errors?.name?.message}
+            sx={{ marginBottom: '2rem' }}
+            important={true}
+          />
         </Box>
-        <Grid>
-          <Box mb="1rem">
-            <Input
-              label="Name of Band"
-              register={register('name')}
-              errorText={errors?.name?.message}
-              sx={{ marginBottom: '2rem' }}
-            />
-          </Box>
-          <Box mb="1rem">
-            <CustomSelect
-              label="Choose Band Type"
-              name="bandType"
-              options={bandTypeOptions}
-              register={register('bandType')}
-              control={control}
-            />
-          </Box>
-          <Box>
-            <TextArea
-              label="Description"
-              register={register('description')}
-              name="description"
-              type="text"
-            />
-          </Box>
-        </Grid>
-      </form>
-    </ModalBox>
+        <Box mb="1rem">
+          <CustomSelect
+            label="Choose Band Type"
+            name="bandType"
+            options={bandTypeOptions}
+            control={control}
+            errorText={errors?.bandType?.message}
+            important={true}
+          />
+        </Box>
+        <Box>
+          <TextArea
+            label="Description"
+            control={control}
+            name="description"
+            errorText={errors?.description?.message}
+          />
+        </Box>
+      </Grid>
+
+      <Box display="flex" justifyContent="flex-end" mb="1rem">
+        <GlobalCustomButton
+          type="submit"
+          style={{ marginTop: '1rem' }}
+        >
+          <CreateIcon fontSize="small" sx={{ marginRight: '5px' }} />
+          Create Band
+        </GlobalCustomButton>
+      </Box>
+    </form>
   );
 };
